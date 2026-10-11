@@ -1,8 +1,16 @@
-},
+{
+  "name": "projet-methode-agile-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check-db": "node scripts/check-db.js"
+  },
   "dependencies": {
     "dotenv": "^18.0.6",
-    "express": "^5.2.1"
     "express": "^5.2.1",
-    "mysql2": "^3.24.5"
+    "mysql2": "^3.24.5",
+    "bcrypt": "^6.0.0",
+    "express-session": "^1.18.2"
   }
 }
