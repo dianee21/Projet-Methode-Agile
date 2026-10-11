@@ -1,6 +1,5 @@
-// Je crée un modèle pour vérifier qu'un courriel ressemble à une adresse valide
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+// Je crée un modèle pour vérifier que le nom d'utilisateur contient seulement lettres, chiffres, point, tiret et souligné
+const NOM_PATTERN = /^[A-Za-z0-9._-]+$/;
 // Je crée une fonction pour vérifier les données envoyées lors de la connexion
 function validateLogin(data) {
   const errors = {}; // Je garde ici les erreurs trouvées
@@ -8,12 +7,12 @@ function validateLogin(data) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return { valid: false, errors: { body: 'Corps de requête invalide.' } };
   }
-  // Je vérifie que le courriel est du texte et qu'il n'est pas vide
-  if (typeof data.email !== 'string' || !data.email.trim()) {
-    errors.email = 'Le courriel est obligatoire.';
-  } else if (data.email.trim().length > 254 || !EMAIL_PATTERN.test(data.email.trim())) {
-    // Je refuse un courriel trop long ou qui ne respecte pas le format
-    errors.email = 'Le format du courriel est invalide.';
+  // Je vérifie que le nom d'utilisateur est du texte et qu'il n'est pas vide
+  if (typeof data.nom_utilisateur !== 'string' || !data.nom_utilisateur.trim()) {
+    errors.nom_utilisateur = "Le nom d'utilisateur est obligatoire.";
+  } else if (data.nom_utilisateur.trim().length > 50 || !NOM_PATTERN.test(data.nom_utilisateur.trim())) {
+    // Je refuse un nom trop long ou qui contient des caractères interdits
+    errors.nom_utilisateur = "Le nom d'utilisateur est invalide.";
   }
   // Je vérifie que le mot de passe est du texte et qu'il n'est pas vide
   if (typeof data.password !== 'string' || !data.password) {
@@ -25,17 +24,15 @@ function validateLogin(data) {
   // Je retourne si les données sont valides et la liste des erreurs
   return { valid: Object.keys(errors).length === 0, errors };
 }
-
 // Je crée un middleware que Christine pourra utiliser dans sa route de connexion
 function validateLoginRequest(req, res, next) {
   const result = validateLogin(req.body); // Je vérifie les informations reçues
   // Si elles ne sont pas valides je retourne une erreur 400 avec les détails
   if (!result.valid) return res.status(400).json({ error: 'VALIDATION_ERROR', errors: result.errors });
-  // Je retire les espaces autour du courriel et je le mets en minuscules
+  // Je retire les espaces autour du nom d'utilisateur
   // Je ne modifie pas le mot de passe car il doit rester exactement comme saisi
-  req.body.email = req.body.email.trim().toLowerCase();
+  req.body.nom_utilisateur = req.body.nom_utilisateur.trim();
   return next(); // Si tout va bien je passe à la suite de la route
 }
-
 // Je rends mes fonctions accessibles aux autres fichiers
 module.exports = { validateLogin, validateLoginRequest };
