@@ -1,14 +1,14 @@
 // Ajoute les utilisateurs de test (US01). Exécution : node scripts/seed.js
 const pool = require('../config/db');
 const { hashPassword } = require('../services/passwordService');
-// Comptes de test : l'enseignant + les étudiants de l'équipe
+// Comptes de test : le prof + les membres de l'équipe (tous enseignants)
 const UTILISATEURS_TEST = [
   { nom_utilisateur: 'Farid',     mot_de_passe: 'Farid',     prenom: 'Farid',     nom: 'Enseignant', role: 'enseignant' },
-  { nom_utilisateur: 'christine', mot_de_passe: 'Christine', prenom: 'Christine', nom: 'Bautista',   role: 'etudiant' },
-  { nom_utilisateur: 'thomas',    mot_de_passe: 'Thomas',    prenom: 'Thomas',    nom: 'Rodrigues',  role: 'etudiant' },
-  { nom_utilisateur: 'diane',     mot_de_passe: 'Diane',     prenom: 'Diane',     nom: 'Devi',       role: 'etudiant' },
-  { nom_utilisateur: 'marilou',   mot_de_passe: 'Marilou',   prenom: 'Marilou',   nom: 'Scott',      role: 'etudiant' },
-  { nom_utilisateur: 'amine',     mot_de_passe: 'Amine',     prenom: 'Amine',     nom: 'Lemgandez',  role: 'etudiant' },
+  { nom_utilisateur: 'christine', mot_de_passe: 'Christine', prenom: 'Christine', nom: 'Bautista',   role: 'enseignant' },
+  { nom_utilisateur: 'thomas',    mot_de_passe: 'Thomas',    prenom: 'Thomas',    nom: 'Rodrigues',  role: 'enseignant' },
+  { nom_utilisateur: 'diane',     mot_de_passe: 'Diane',     prenom: 'Diane',     nom: 'Devi',       role: 'enseignant' },
+  { nom_utilisateur: 'marilou',   mot_de_passe: 'Marilou',   prenom: 'Marilou',   nom: 'Scott',      role: 'enseignant' },
+  { nom_utilisateur: 'amine',     mot_de_passe: 'Amine',     prenom: 'Amine',     nom: 'Lemgandez',  role: 'enseignant' },
 ];
 async function seed() {
   try {
