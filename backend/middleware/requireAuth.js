@@ -2,7 +2,7 @@
 function requireAuth(req, res, next) {
     //Vérifier si une session existe avec un identifiant utilisateur
     if(!req.session || !req.session.userId) {
-        return res.json({
+        return res.status(401).json({
             message: "Vous devez être connecté pour accéder à cette page."
         });
     }

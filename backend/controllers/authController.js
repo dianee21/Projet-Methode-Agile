@@ -6,18 +6,18 @@ const { startUserSession } = require('../services/sessionService');
 // Fonction pour connecter un enseignant
 async function login(req, res, next) {
     try{
-        const { nom_utilisateur, mot_de_passe } = req.body; // Récupérer les informations envoyées par le formulaire
+        const { nom_utilisateur, password } = req.body;     // Récupérer les informations envoyées par le formulaire
         const user = await findByUsername(nom_utilisateur); // Rechercher l'utilisateur dans la base de données
 
         // Vérifier si l'utilisateur existe et si son mot de passe est correct
-        if(!user || !(await verifyPassword(mot_de_passe, user.mot_de_passe))) {
-            return res.json({
+        if(!user || !(await verifyPassword(password, user.mot_de_passe))) {
+            return res.status(401).json({
                 message: "Nom d’utilisateur ou mot de passe incorrect."
             });
         }
 
         if(user.role !== 'enseignant') {
-            return res.json({
+            return res.status(403).json({
                 message: "Accès réservé aux enseignants."
             });
         }
@@ -33,7 +33,7 @@ async function login(req, res, next) {
         }
 
         // Confirmer la connexion sans retourner le mot de passe
-        return res.json({
+        return res.status(200).json({
             message: "Connexion réussie.",
             user: {
                 id: user.id,
