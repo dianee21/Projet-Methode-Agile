@@ -20,6 +20,9 @@ function validateLogin(data) {
   } else if (data.password.length > 1024) {
     // Je refuse un mot de passe trop long
     errors.password = 'Le mot de passe est trop long.';
+  } else if (!/[A-Z]/.test(data.password)) {
+    // Je refuse un mot de passe sans majuscule
+    errors.password = 'Le mot de passe doit contenir une majuscule.';
   }
   // Je retourne si les données sont valides et la liste des erreurs
   return { valid: Object.keys(errors).length === 0, errors };

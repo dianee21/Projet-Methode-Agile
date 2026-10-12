@@ -17,16 +17,22 @@ test('rejette les champs vides', () => {
 test('rejette un nom invalide', () => {
   assert.equal(validateLogin({nom_utilisateur:"Farim' OR '1'='1",password:'123'}).valid, false);
 });
+// Je vérifie qu'un mot de passe sans majuscule est refusé
+test('rejette un mot de passe sans majuscule', () => {
+  const result = validateLogin({nom_utilisateur:'Farid',password:'farid'});
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.password);
+});
 // Je vérifie que les valeurs qui ne sont pas du bon type sont refusées
 test('rejette un type invalide', () => {
   assert.equal(validateLogin({nom_utilisateur: 10,password: []}).valid, false);
 });
 // Je vérifie que le middleware retire les espaces du nom sans changer le mot de passe
 test("middleware nettoie le nom d'utilisateur", () => {
-  const req = {body:{nom_utilisateur:'  Farim ',password:' abc '}};
+  const req = {body:{nom_utilisateur:'  Farim ',password:' Abc '}};
   let called=false;
   validateLoginRequest(req, {}, () => {called=true});
   assert.equal(called,true);
   assert.equal(req.body.nom_utilisateur,'Farim');
-  assert.equal(req.body.password,' abc ');
+  assert.equal(req.body.password,' Abc ');
 });
