@@ -9,10 +9,17 @@ async function login(req, res, next) {
         const { nom_utilisateur, password } = req.body;     // Récupérer les informations envoyées par le formulaire
         const user = await findByUsername(nom_utilisateur); // Rechercher l'utilisateur dans la base de données
 
-        // Vérifier si l'utilisateur existe et si son mot de passe est correct
-        if(!user || !(await verifyPassword(password, user.mot_de_passe))) {
+        // Vérifier si l'utilisateur existe
+        if(!user) {
             return res.status(401).json({
-                message: "Nom d’utilisateur ou mot de passe incorrect."
+                message: "Ce compte n'existe pas."
+            });
+        }
+
+        // Vérifier si le mot de passe est correct
+        if (!(await verifyPassword(password, user.mot_de_passe))) {
+            return res.status(401).json({
+                message: "Le mot de passe est incorrect."
             });
         }
 
