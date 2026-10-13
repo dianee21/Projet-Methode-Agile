@@ -1,0 +1,120 @@
+:root {
+  --rouge: #e2231a;
+  --rouge-fonce: #b81c15;
+  --gris: #6b6b6b;
+  --gris-clair: #f2f2f2;
+  --noir: #1a1a1a;
+  --blanc: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  background-color: var(--gris-clair);
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: transparent;
+  color: var(--noir);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Image de fond fixée à la fenêtre */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("../image/imagesAH4.jpg") center / cover no-repeat;
+  z-index: -1;
+}
+
+.entete {
+  background-color: var(--blanc);
+  border-bottom: 4px solid var(--rouge);
+  padding: 12px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.entete-logo {
+  height: 40px;
+  width: auto;
+}
+
+.bouton-deconnexion {
+  padding: 10px 18px;
+  background-color: var(--rouge);
+  color: var(--blanc);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.bouton-deconnexion:hover {
+  background-color: var(--rouge-fonce);
+}
+
+.contenu {
+  flex: 1;
+  padding: 40px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.carte-bienvenue {
+  background-color: var(--blanc);
+  border-top: 6px solid var(--rouge);
+  border-radius: 12px;
+  padding: 30px 36px;
+  width: 700px;
+  max-width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.carte-bienvenue h1 {
+  margin: 0 0 12px 0;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.carte-bienvenue p {
+  margin: 0;
+  color: var(--gris);
+  font-size: 16px;
+}
+
+.pied-page {
+  background-color: var(--noir);
+  padding: 12px 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.pied-page p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--blanc);
+}
+
+@media (max-width: 600px) {
+  .entete {
+    padding: 10px 16px;
+  }
+
+  .contenu {
+    padding: 24px 16px;
+  }
+}

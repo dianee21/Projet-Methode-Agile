@@ -16,10 +16,10 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background-image: url("../image/imagesAH3.jpg");
   background-size: cover;
-  background-position: top left;                
+  background-position: top left;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; 
+  background-attachment: fixed;
   color: var(--noir);
   display: flex;
   flex-direction: column;
@@ -185,12 +185,12 @@ button:active {
 }
 
 .champ-mdp input {
-  padding-right: 48px;   
+  padding-right: 48px;
 }
 
 .bouton-oeil {
   position: absolute;
-  top: 6px;          
+  top: 6px;
   right: 0;
   height: 44px;
   width: 44px;
@@ -228,4 +228,3 @@ button:active {
     padding: 14px 16px 20px;
   }
 }
- 

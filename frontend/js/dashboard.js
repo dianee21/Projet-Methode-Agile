@@ -1,6 +1,6 @@
 // Vérifier si l'enseignant est connecté
 async function verifierConnexion() {
-    try{
+    try {
         // Demander au serveur si la session est valide
         const response = await fetch('/api/dashboard');
 
@@ -19,7 +19,7 @@ async function verifierConnexion() {
         const data = await response.json();
 
         console.log(data.message);
-    } catch(error) {
+    } catch (error) {
         console.error(error);
     }
 }
