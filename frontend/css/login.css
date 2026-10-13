@@ -14,8 +14,6 @@
 
 body {
   font-family: "Segoe UI", Arial, sans-serif;
-  background: linear-gradient(135deg, var(--gris-clair) 60%, #e4e4e4 100%);
-  background-color: var(--gris-clair);   
   background-image: url("../image/imagesAH3.jpg");
   background-size: cover;
   background-position: top left;                
