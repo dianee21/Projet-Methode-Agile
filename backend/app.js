@@ -10,11 +10,11 @@ app.use(express.json());            // Permettre à Express de recevoir des donn
 app.use(createSessionMiddleware()); // Activer la gestion des sessions
 
 // Servir les fichiers du frontend (CSS, JS, images, HTML)
-app.use(express.static(path.join(dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Afficher la page de login à la racine
 app.get('/', (req, res) => {
-    res.sendFile(path.join(dirname, '../frontend/html/login.html'));
+    res.sendFile(path.join(__dirname, '../frontend/html/login.html'));
 });
 
 app.use('/api/auth', authRoutes);   // Ajouter les routes d'authentification
