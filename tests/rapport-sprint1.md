@@ -1,4 +1,5 @@
-Vérifications:
+A)
+Vérifications initiales:
 1. Installation des dépendances avec npm install - Réussi
 2. Démarrage initial avec node server.js - Échoué
 3. Démarrage après la copie de .env.example vers .env - Réussi
@@ -26,5 +27,22 @@ Tests restant à effectuer
 - Déconnexion et refus d'accès après déconnexion
 - Blocage après trois échecs et déblocages après cinq minutes
 - Vérification des intructions d'installation
+
+B)
+Nouvelles vérifications après mise à jour
+- Installations des dépendances - Réussi
+- Test automatiques - 12 Réussi
+- La page de connexion est maintenant présente dans le dépôt
+- La connexion à la base fonctionne 
+
+C)
+1. Affichage de la page de connexion - Réussi
+2. Connexion avec le compte enseignant - Réussi
+3. Refus de deux champs vides avec messages de validation - Réussi
+4. Refus d'un mauvais mot de passe avec message d'erreur - Réussi
+5. Affichage du tableau de bord après connexion - Réussi
+6. Refus d'accès au tableau de bord sans authentification - Réussi
+7. Maintien de la session après actualisation - Réussi
+8. Déconnexion - Réussi
 
 
