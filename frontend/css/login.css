@@ -180,6 +180,46 @@ button:active {
   border-radius: 6px;
 }
 
+.champ-mdp {
+  position: relative;
+}
+
+.champ-mdp input {
+  padding-right: 48px;   
+}
+
+.bouton-oeil {
+  position: absolute;
+  top: 6px;          
+  right: 0;
+  height: 44px;
+  width: 44px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--gris);
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.bouton-oeil:hover {
+  background: transparent;
+  color: var(--rouge);
+  box-shadow: none;
+}
+
+.bouton-oeil:active {
+  transform: none;
+}
+
 @media (max-width: 600px) {
   .pied-bas {
     flex-direction: column;

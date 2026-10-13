@@ -50,7 +50,7 @@ formulaire.addEventListener('submit', async (evenement) => {
     }
 
     if (donnees.user) {
-      window.location.href = 'dashboard.html';
+      window.location.href = '/html/dashboard.html';
       return;
     }
 
@@ -60,3 +60,25 @@ formulaire.addEventListener('submit', async (evenement) => {
     erreurGenerale.textContent = 'Impossible de se connecter au serveur.';
   }
 });
+
+
+const champPassword = document.getElementById('password');
+const boutonOeil = document.getElementById('boutonOeil');
+
+function afficherMotDePasse() {
+  champPassword.type = 'text';
+}
+
+function cacherMotDePasse() {
+  champPassword.type = 'password';
+}
+
+boutonOeil.addEventListener('pointerdown', (evenement) => {
+  evenement.preventDefault();   // garde le curseur dans le champ
+  afficherMotDePasse();
+});
+
+boutonOeil.addEventListener('pointerup', cacherMotDePasse);
+boutonOeil.addEventListener('pointerleave', cacherMotDePasse);
+boutonOeil.addEventListener('pointercancel', cacherMotDePasse);
+boutonOeil.addEventListener('contextmenu', (evenement) => evenement.preventDefault());

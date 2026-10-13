@@ -18,9 +18,18 @@
       <label for="nom_utilisateur">Nom d'utilisateur</label>
       <input type="text" id="nom_utilisateur" name="nom_utilisateur">
       <p class="erreur" id="erreurNom"></p>
-
+      
       <label for="password">Mot de passe</label>
-      <input type="password" id="password" name="password">
+      <div class="champ-mdp">
+        <input type="password" id="password" name="password">
+        <button type="button" id="boutonOeil" class="bouton-oeil" aria-label="Maintenir pour afficher le mot de passe">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
       <p class="erreur" id="erreurPassword"></p>
 
       <p class="erreur" id="erreurGenerale"></p>
@@ -31,7 +40,7 @@
   <footer class="pied-page">
     <div class="pied-adresse">
       <a href="https://www.google.ca/maps/place/Coll%C3%A8ge+Ahuntsic/@45.552243,-73.643606,15z/data=!4m5!3m4!1s0x0:0xcd8d5a1783ed76c8!8m2!3d45.552243!4d-73.643606"
-         target="_blank" rel="noopener noreferrer"> 
+        target="_blank" rel="noopener noreferrer">
         9155, rue Saint-Hubert, Montréal (Québec) H2M 1Y8
       </a>
       <p class="pied-telephone">514 389-5921</p>
@@ -44,4 +53,5 @@
 
   <script src="../js/login.js"></script>
 </body>
+
 </html>
