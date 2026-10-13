@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion</title>
+  <link rel="icon" type="image/png" href="../image/imagesAH1.png">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+  <main class="carte">
+    <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="logo">
+    <h1>Connexion</h1>
+
+    <form id="formLogin">
+      <label for="nom_utilisateur">Nom d'utilisateur</label>
+      <input type="text" id="nom_utilisateur" name="nom_utilisateur">
+      <p class="erreur" id="erreurNom"></p>
+
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" name="password">
+      <p class="erreur" id="erreurPassword"></p>
+
+      <p class="erreur" id="erreurGenerale"></p>
+      <button type="submit">Se connecter</button>
+    </form>
+  </main>
+
+  <footer class="pied-page">
+    <div class="pied-adresse">
+      <a href="https://www.google.ca/maps/place/Coll%C3%A8ge+Ahuntsic/@45.552243,-73.643606,15z/data=!4m5!3m4!1s0x0:0xcd8d5a1783ed76c8!8m2!3d45.552243!4d-73.643606"
+         target="_blank" rel="noopener noreferrer"> 
+        9155, rue Saint-Hubert, Montréal (Québec) H2M 1Y8
+      </a>
+      <p class="pied-telephone">514 389-5921</p>
+    </div>
+    <div class="pied-bas">
+      <p>© 2026 Collège Ahuntsic. Tous droits réservés.</p>
+      <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="pied-logo">
+    </div>
+  </footer>
+
+  <script src="../js/login.js"></script>
+</body>
+</html>
