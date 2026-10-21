@@ -18,4 +18,9 @@ async function findQuizById(quizId, enseignantId) {
   return rows[0] || null;
 }
 
-module.exports = { createQuiz, findQuizById };
+// vérifie qu'il y a exactement une seule bonne réponse
+function verifierBonneReponse(reponses) {
+  const nbCorrectes = reponses.filter((r) => r.est_correcte).length;
+  if (nbCorrectes !== 1) throw new Error('Il faut choisir exactement une bonne réponse.');
+}
+module.exports = { createQuiz, findQuizById, verifierBonneReponse };
