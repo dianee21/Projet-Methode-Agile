@@ -40,3 +40,12 @@ CREATE TABLE IF NOT EXISTS questions (
   date_creation  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB;
+
+-- une réponse possible appartient à une question (max 5, une seule correcte)
+CREATE TABLE IF NOT EXISTS reponses (
+  id             INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  question_id    INT UNSIGNED  NOT NULL,
+  texte          VARCHAR(255)  NOT NULL,
+  est_correcte   BOOLEAN       NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
