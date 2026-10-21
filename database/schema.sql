@@ -30,3 +30,13 @@ CREATE TABLE IF NOT EXISTS quiz (
   date_creation  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB;
+
+-- une question appartient à un quiz (QCM ou Vrai/Faux)
+CREATE TABLE IF NOT EXISTS questions (
+  id             INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  quiz_id        INT UNSIGNED  NOT NULL,
+  enonce         TEXT          NOT NULL,
+  type           ENUM('qcm', 'vrai_faux') NOT NULL,
+  date_creation  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
