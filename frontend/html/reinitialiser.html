@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mot de passe oublié</title>
+  <link rel="icon" type="image/png" href="../image/imagesAH1.png">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+  <main class="carte">
+    <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="logo">
+    <h1>Réinitialiser le mot de passe</h1>
+
+    <form id="formReset">
+      <label for="nom_utilisateur">Nom d'utilisateur</label>
+      <input type="text" id="nom_utilisateur" name="nom_utilisateur">
+      <p class="erreur" id="erreurNom"></p>
+
+      <label for="nouveau_mdp">Nouveau mot de passe</label>
+      <div class="champ-mdp">
+        <input type="password" id="nouveau_mdp" name="nouveau_mdp">
+        <button type="button" class="bouton-oeil" aria-label="Maintenir pour afficher le mot de passe">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+      <p class="erreur" id="erreurNouveau"></p>
+
+      <label for="confirmation">Confirmation du nouveau mot de passe</label>
+      <div class="champ-mdp">
+        <input type="password" id="confirmation" name="confirmation">
+        <button type="button" class="bouton-oeil" aria-label="Maintenir pour afficher le mot de passe">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+      <p class="erreur" id="erreurConfirmation"></p>
+
+      <p class="erreur" id="erreurGenerale"></p>
+      <button type="submit">Confirmer le changement</button>
+    </form>
+
+    <p class="lien-oublie">
+      <a href="/html/login.html">Retour à la connexion</a>
+    </p>
+  </main>
+
+  <script src="../js/reinitialiser.js"></script>
+</body>
+
+</html>

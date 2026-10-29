@@ -19,6 +19,15 @@ async function findQuizById(quizId, enseignantId) {
   return rows[0] || null;
 }
 
+// récupère tous les quiz appartenant à un enseignant
+async function findQuizzesByEnseignant(enseignantId) {
+  const [rows] = await pool.execute(
+    'SELECT id, titre, description, date_creation FROM quiz WHERE enseignant_id = ? ORDER BY date_creation DESC, id DESC',
+    [enseignantId]
+  );
+  return rows;
+}
+
 // US04 : vérifie qu'il y a exactement une bonne réponse
 function verifierBonneReponse(reponses) {
   const nbCorrectes = reponses.filter((r) => r.est_correcte).length;
@@ -93,4 +102,4 @@ async function findQuestionsByQuiz(quizId) {
   return questions;
 }
 
-module.exports = { createQuiz, findQuizById, verifierBonneReponse, addQuestion, findQuestionsByQuiz, MAX_REPONSES };
+module.exports = { createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz, MAX_REPONSES };
