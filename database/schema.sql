@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
   date_creation    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   derniere_connexion DATETIME    NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_users_nom_utilisateur (nom_utilisateur)
-   UNIQUE KEY uq_users_email (email)
+  UNIQUE KEY uq_users_nom_utilisateur (nom_utilisateur),
+  UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB;
 
 -- un quiz appartient au prof
