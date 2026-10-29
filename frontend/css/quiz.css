@@ -1,0 +1,203 @@
+
+
+/* Disposition générale */
+
+.conteneur-creation {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    gap: 25px;
+    width: 1100px;
+    max-width: 100%;
+    align-items: start;
+}
+
+/* Cartes */
+
+.carte-creation,
+.carte-apercu {
+    background-color: var(--blanc);
+    border-top: 6px solid var(--rouge);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    min-width: 0;
+}
+
+.carte-creation h1 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.carte-creation h2,
+.carte-apercu h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 25px 0 15px;
+}
+
+.carte-apercu h2 {
+    margin-top: 0;
+}
+
+.carte-creation > p {
+    color: var(--gris);
+    margin-bottom: 25px;
+}
+
+/* Champs du formulaire */
+
+.champ-formulaire {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.champ-formulaire label {
+    font-weight: 600;
+}
+
+.champ-formulaire input,
+.champ-formulaire textarea,
+.champ-formulaire select,
+.champ-reponse input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font: inherit;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.champ-formulaire input:focus,
+.champ-formulaire textarea:focus,
+.champ-formulaire select:focus,
+.champ-reponse input[type="text"]:focus {
+    outline: 2px solid var(--rouge);
+    outline-offset: 2px;
+}
+
+.champ-formulaire textarea {
+    resize: vertical;
+}
+
+/* Réponses */
+
+.section-reponses {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px;
+    margin: 20px 0;
+    min-width: 0;
+}
+
+.section-reponses legend {
+    font-weight: 600;
+    padding: 0 8px;
+}
+
+.section-reponses p {
+    color: var(--gris);
+    font-size: 14px;
+}
+
+#listeReponses {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.champ-reponse {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.champ-reponse input[type="radio"] {
+    accent-color: var(--rouge);
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Boutons */
+
+.bouton-principal {
+    background-color: var(--rouge);
+    color: var(--blanc);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.bouton-principal:hover {
+    background-color: var(--rouge-fonce);
+}
+
+.bouton-secondaire {
+    background-color: var(--blanc);
+    color: var(--rouge);
+    border: 1px solid var(--rouge);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.bouton-secondaire:hover {
+    background-color: var(--gris-clair);
+}
+
+.bouton-secondaire:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Aperçu des questions */
+
+#apercuQuestions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.apercu-question {
+    background-color: var(--gris-clair);
+    border-radius: 8px;
+    padding: 15px;
+    overflow-wrap: anywhere;
+}
+
+.apercu-question h3 {
+    font-size: 15px;
+    margin: 0 0 10px;
+}
+
+.apercu-question p {
+    font-size: 14px;
+    color: var(--gris);
+}
+
+.carte-apercu .bouton-principal {
+    width: 100%;
+}
+
+/* Responsive */
+
+@media (max-width: 800px) {
+    .conteneur-creation {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .carte-creation,
+    .carte-apercu {
+        padding: 20px;
+    }
+}
