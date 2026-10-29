@@ -10,11 +10,13 @@ CREATE TABLE IF NOT EXISTS users (
   mot_de_passe     VARCHAR(255)  NOT NULL,
   prenom           VARCHAR(100)  NULL,
   nom              VARCHAR(100)  NULL,
+  email            VARCHAR(255)  NULL,
   role             ENUM('enseignant', 'etudiant') NOT NULL DEFAULT 'etudiant',
   date_creation    DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   derniere_connexion DATETIME    NULL,
   PRIMARY KEY (id),
   UNIQUE KEY uq_users_nom_utilisateur (nom_utilisateur)
+   UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB;
 
 -- un quiz appartient au prof
@@ -48,3 +50,16 @@ CREATE TABLE IF NOT EXISTS reponses (
   PRIMARY KEY (id),
   CONSTRAINT fk_reponses_question FOREIGN KEY (question_id) REFERENCES questions (id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- un jeton pour réinitialiser le mot de passe par courriel (valide 30 min, usage unique)
+ CREATE TABLE IF NOT EXISTS password_resets (
+   id             INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+   user_id        INT UNSIGNED  NOT NULL,
+   token_hash     CHAR(64)      NOT NULL,
+   expire_le      DATETIME      NOT NULL,
+   utilise        BOOLEAN       NOT NULL DEFAULT FALSE,
+   date_creation  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (id),
+   UNIQUE KEY uq_reset_token (token_hash),
+   CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+ ) ENGINE=InnoDB;
