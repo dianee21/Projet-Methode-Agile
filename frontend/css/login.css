@@ -255,6 +255,27 @@ button:active {
   border-bottom-color: var(--rouge);
 }
 
+.lien-oublie {
+  text-align: center;
+  margin: 16px 0 0 0;
+  font-size: 14px;
+}
+
+.lien-oublie a {
+  color: var(--gris);
+  text-decoration: none;
+}
+
+.lien-oublie a:hover {
+  color: var(--rouge);
+  text-decoration: underline;
+}
+
+.succes {
+  text-align: center;
+  font-weight: 600;
+  margin: 12px 0 0 0;
+}
 
 @media (max-width: 600px) {
   .pied-bas {
