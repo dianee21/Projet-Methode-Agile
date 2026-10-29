@@ -5,7 +5,7 @@ async function verifierConnexion() {
         const response = await fetch('/api/dashboard');
 
         // Rediriger si l'utilisateur n'est pas connecté
-        if (response.status === 401) {
+          if (response.status === 401 || response.status === 403) { 
             window.location.href = '/html/login.html';
             return;
         }

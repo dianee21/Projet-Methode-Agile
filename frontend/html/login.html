@@ -14,11 +14,17 @@
     <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="logo">
     <h1>Connexion</h1>
 
+    <div class="onglets" role="tablist">
+      <button type="button" class="onglet actif" data-role="enseignant" role="tab"
+        aria-selected="true">Enseignant</button>
+      <button type="button" class="onglet" data-role="etudiant" role="tab" aria-selected="false">Étudiant</button>
+    </div>
+
     <form id="formLogin">
       <label for="nom_utilisateur">Nom d'utilisateur</label>
       <input type="text" id="nom_utilisateur" name="nom_utilisateur">
       <p class="erreur" id="erreurNom"></p>
-      
+
       <label for="password">Mot de passe</label>
       <div class="champ-mdp">
         <input type="password" id="password" name="password">

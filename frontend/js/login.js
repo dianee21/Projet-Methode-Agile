@@ -3,6 +3,26 @@ const erreurNom = document.getElementById('erreurNom');
 const erreurPassword = document.getElementById('erreurPassword');
 const erreurGenerale = document.getElementById('erreurGenerale');
 
+let roleChoisi = 'enseignant';
+const onglets = document.querySelectorAll('.onglet');
+
+onglets.forEach((onglet) => {
+  onglet.addEventListener('click', () => {
+    roleChoisi = onglet.dataset.role;
+
+    onglets.forEach((autre) => {
+      const actif = autre === onglet;
+      autre.classList.toggle('actif', actif);
+      autre.setAttribute('aria-selected', actif);
+    });
+
+    // Effacer les anciennes erreurs quand on change d'onglet
+    erreurNom.textContent = '';
+    erreurPassword.textContent = '';
+    erreurGenerale.textContent = '';
+  });
+});
+
 formulaire.addEventListener('submit', async (evenement) => {
   evenement.preventDefault();
 
@@ -31,7 +51,8 @@ formulaire.addEventListener('submit', async (evenement) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nom_utilisateur: nomUtilisateur,
-        password: motDePasse
+        password: motDePasse,
+        role: roleChoisi
       })
     });
 
@@ -50,7 +71,11 @@ formulaire.addEventListener('submit', async (evenement) => {
     }
 
     if (donnees.user) {
-      window.location.href = '/html/dashboard.html';
+      if (donnees.user.role === 'etudiant') {
+        window.location.href = '/html/dashboard-etudiant.html';
+      } else {
+        window.location.href = '/html/dashboard.html';
+      }
       return;
     }
 
