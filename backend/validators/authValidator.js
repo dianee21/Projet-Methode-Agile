@@ -24,6 +24,12 @@ function validateLogin(data) {
     // Je refuse un mot de passe sans majuscule
     errors.password = 'Le mot de passe doit contenir une majuscule.';
   }
+
+  // Je vérifie que le rôle est enseignant ou etudiant
+  if (data.role !== 'enseignant' && data.role !== 'etudiant') {
+    errors.role = 'Le rôle est invalide.';
+  }
+
   // Je retourne si les données sont valides et la liste des erreurs
   return { valid: Object.keys(errors).length === 0, errors };
 }

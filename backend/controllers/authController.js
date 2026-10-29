@@ -5,12 +5,12 @@ const { startUserSession } = require('../services/sessionService');
 
 // Fonction pour connecter un enseignant
 async function login(req, res, next) {
-    try{
-        const { nom_utilisateur, password } = req.body;     // Récupérer les informations envoyées par le formulaire
+    try {
+        const { nom_utilisateur, password, role } = req.body;     // Récupérer les informations envoyées par le formulaire
         const user = await findByUsername(nom_utilisateur); // Rechercher l'utilisateur dans la base de données
 
         // Vérifier si l'utilisateur existe
-        if(!user) {
+        if (!user) {
             return res.status(401).json({
                 message: "Ce compte n'existe pas."
             });
@@ -23,10 +23,12 @@ async function login(req, res, next) {
             });
         }
 
-        if(user.role !== 'enseignant') {
+        if (user.role !== role) {
             return res.status(403).json({
-                message: "Accès réservé aux enseignants."
-            });
+                message: role === 'etudiant'
+                    ? "Ce compte n'est pas un compte étudiant."
+                    : "Ce compte n'est pas un compte enseignant."
+            });s
         }
 
         // Créer une session pour l'utilisateur

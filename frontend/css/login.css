@@ -220,6 +220,42 @@ button:active {
   transform: none;
 }
 
+.onglets {
+  display: flex;
+  margin-top: 20px;
+  border-bottom: 2px solid var(--gris-bordure);
+}
+
+.onglet {
+  flex: 1;
+  width: auto;
+  margin: 0 0 -2px 0;
+  padding: 10px;
+  background: transparent;
+  color: var(--gris);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  font-size: 15px;
+  box-shadow: none;
+}
+
+.onglet:hover {
+  background: transparent;
+  color: var(--rouge);
+  box-shadow: none;
+}
+
+.onglet:active {
+  transform: none;
+}
+
+.onglet.actif {
+  color: var(--rouge);
+  border-bottom-color: var(--rouge);
+}
+
+
 @media (max-width: 600px) {
   .pied-bas {
     flex-direction: column;
