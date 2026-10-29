@@ -12,6 +12,12 @@ async function findByUsername(nomUtilisateur) {
 async function updateLastLogin(id) {
   await pool.execute('UPDATE users SET derniere_connexion = NOW() WHERE id = ?', [id]);
 }
+
+// Réinitialisation : change le mot de passe
+async function updatePassword(id, hash) {
+  await pool.execute('UPDATE users SET mot_de_passe = ? WHERE id = ?', [hash, id]);
+}
+
 // Session : trouve l'utilisateur connecté avec req.session.userId (pas mot de passe)
 async function findById(id) {
   const [rows] = await pool.execute(
@@ -20,4 +26,4 @@ async function findById(id) {
   );
   return rows[0] || null;
 }
-module.exports = { findByUsername, updateLastLogin, findById };
+module.exports = { findByUsername, updateLastLogin, updatePassword, findById };

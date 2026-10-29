@@ -1,6 +1,6 @@
 // Importation des fonctions nécessaires pour l'authentification
-const { findByUsername, updateLastLogin } = require('../models/userModel');
-const { verifyPassword } = require('../services/passwordService');
+const { findByUsername, updateLastLogin, updatePassword } = require('../models/userModel');
+const { verifyPassword, hashPassword } = require('../services/passwordService');
 const { startUserSession } = require('../services/sessionService');
 
 // Fonction pour connecter un enseignant
@@ -58,5 +58,36 @@ async function login(req, res, next) {
     }
 }
 
+async function resetPassword(req, res, next) {
+    try {
+        const { nom_utilisateur, nouveau_mot_de_passe } = req.body;
+
+        if (typeof nom_utilisateur !== 'string' || !nom_utilisateur.trim()) {
+            return res.status(400).json({ message: "Le nom d'utilisateur est obligatoire." });
+        }
+
+        if (typeof nouveau_mot_de_passe !== 'string' || !nouveau_mot_de_passe
+            || nouveau_mot_de_passe.length > 50
+            || !/[A-Z]/.test(nouveau_mot_de_passe)) {
+            return res.status(400).json({
+                message: "Le mot de passe doit contenir une majuscule (50 caractères maximum)."
+            });
+        }
+
+        const user = await findByUsername(nom_utilisateur.trim());
+
+        if (!user) {
+            return res.status(404).json({ message: "Ce compte n'existe pas." });
+        }
+
+        const hash = await hashPassword(nouveau_mot_de_passe);
+        await updatePassword(user.id, hash);
+
+        return res.status(200).json({ message: "Mot de passe changé.", success: true });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // Exporter la fonction pour l'utiliser dans authRoutes.js
-module.exports = { login };
+module.exports = { login, resetPassword };
