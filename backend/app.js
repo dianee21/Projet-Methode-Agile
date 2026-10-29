@@ -3,6 +3,7 @@ const path = require('path');
 
 const { createSessionMiddleware } = require('./config/session');    // Importer la configuration des sessions
 const authRoutes = require('./routes/authRoutes');                  // Importer les routes d'authentification
+const quizCreationRoutes = require('./routes/quizCreationRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const { requireAuth } = require('./middleware/requireAuth');        // Importer le middleware pour protéger les routes privées
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);   // Ajouter les routes d'authentification
+app.use('/api/quizzes', quizCreationRoutes);
 app.use('/api/quizzes', questionRoutes);
 app.use('/api/quiz', quizRoutes);
 
