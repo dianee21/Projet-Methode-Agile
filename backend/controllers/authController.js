@@ -1,6 +1,6 @@
 // Importation des fonctions nécessaires pour l'authentification
-const { findByUsername, updateLastLogin, updatePassword } = require('../models/userModel');
-const { verifyPassword, hashPassword } = require('../services/passwordService');
+const { findByUsername, updateLastLogin, updatePassword, findByEmail } = require('../models/userModel');
+const { verifyPassword } = require('../services/passwordService');
 const { startUserSession } = require('../services/sessionService');
 
 // Fonction pour connecter un enseignant
@@ -16,7 +16,7 @@ async function login(req, res, next) {
             });
         }
 
-        // Vérifier si le mot de passe est correct
+        // Vérifier si le mot de passe est correcte
         if (!(await verifyPassword(password, user.mot_de_passe))) {
             return res.status(401).json({
                 message: "Le mot de passe est incorrect."
@@ -60,10 +60,10 @@ async function login(req, res, next) {
 
 async function resetPassword(req, res, next) {
     try {
-        const { nom_utilisateur, nouveau_mot_de_passe } = req.body;
+        const { email, nouveau_mot_de_passe } = req.body;
 
-        if (typeof nom_utilisateur !== 'string' || !nom_utilisateur.trim()) {
-            return res.status(400).json({ message: "Le nom d'utilisateur est obligatoire." });
+        if (typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ message: "Le courriel est obligatoire." });
         }
 
         if (typeof nouveau_mot_de_passe !== 'string' || !nouveau_mot_de_passe
@@ -74,14 +74,14 @@ async function resetPassword(req, res, next) {
             });
         }
 
-        const user = await findByUsername(nom_utilisateur.trim());
+        const user = await findByEmail(email.trim().toLowerCase());
 
         if (!user) {
-            return res.status(404).json({ message: "Ce compte n'existe pas." });
+            return res.status(404).json({ message: "Ce courriel n'existe pas." });
         }
 
-        const hash = await hashPassword(nouveau_mot_de_passe);
-        await updatePassword(user.id, hash);
+        // updatePassword chiffre déjà le mot de passe : on lui envoie le texte normal
+        await updatePassword(user.id, nouveau_mot_de_passe);
 
         return res.status(200).json({ message: "Mot de passe changé.", success: true });
     } catch (error) {
