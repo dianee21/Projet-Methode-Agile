@@ -1,7 +1,7 @@
 const express = require('express');
 
 // Importer la fonction de connexion du contrôleur
-const { login } = require('../controllers/authController');
+const { login, resetPassword } = require('../controllers/authController');
 
 // Importer les fonctions de validation et de déconnexion
 const { validateLoginRequest } = require('../validators/authValidator');
@@ -12,6 +12,9 @@ const router = express.Router();
 
 // Vérifier les informations avant de connecter l'enseignant
 router.post('/login', validateLoginRequest, login);
+
+// Changer le mot de passe d'un utilisateur
+router.post('/reset-password', resetPassword);
 
 // Déconnecter l'utilisateur
 router.post('/logout', logout);

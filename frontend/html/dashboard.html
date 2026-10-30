@@ -4,31 +4,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page Acceuil</title>
+  <title>Accueil Enseignant</title>
   <link rel="icon" type="image/png" href="../image/imagesAH1.png">
   <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 
-<header class="entete">
-  <a href="/html/dashboard.html" class="entete-lien" aria-label="Retour au tableau de bord">
-    <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="entete-logo">
-  </a>
-  <button type="button" id="logoutBtn" class="bouton-deconnexion">Déconnexion</button>
-</header>
+<body>
+  <header class="entete">
+    <a href="/html/dashboard.html" class="entete-lien" aria-label="Retour au tableau de bord">
+      <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="entete-logo">
+    </a>
+    <button type="button" id="logoutBtn" class="bouton-deconnexion">Déconnexion</button>
+  </header>
 
+  
 <main class="contenu">
+
+  <!-- Message de bienvenue -->
   <section class="carte-bienvenue">
-    <h1>Bienvenue</h1>
-    <p id="messageBienvenue">On ajouterais des informations ici dans les prochains sprints.</p>
+    <h1>Bienvenue Enseignant</h1>
+    <p id="messageBienvenue">
+      Gérez vos quiz et préparez vos évaluations.
+    </p>
   </section>
+
+  <!-- S2-08 : Afficher les quiz de l'enseignant -->
+  <section class="section-quiz">
+
+    <div class="entete-quiz">
+      <h2>Mes Quiz</h2>
+
+      <a href="/html/quiz.html" class="bouton-creer-quiz">
+        + Créer un quiz
+      </a>
+    </div>
+
+    <!-- Les quiz seront ajoutés ici par dashboard.js -->
+    <div id="listeQuiz">
+      <p>Chargement des quiz...</p>
+    </div>
+
+  </section>
+
 </main>
 
-<footer class="pied-page">
-  <p>© 2026 Collège Ahuntsic. Tous droits réservés.</p>
-</footer>
 
-<script src="../js/dashboard.js"></script>
-<script src="../js/logout.js"></script>
+  <footer class="pied-page">
+    <p>© 2026 Collège Ahuntsic. Tous droits réservés.</p>
+  </footer>
+
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/logout.js"></script>
 </body>
 
 </html>

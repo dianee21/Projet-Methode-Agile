@@ -25,7 +25,7 @@ async function updateLastLogin(id) {
   );
 }
 
-// Session : trouve l'utilisateur connecté
+// Session : trouve l'utilisateur connecté avec req.session.userId (pas mot de passe)
 async function findById(id) {
   const [rows] = await pool.execute(
     'SELECT id, nom_utilisateur, prenom, nom, email, role, derniere_connexion FROM users WHERE id = ? LIMIT 1',
@@ -133,3 +133,4 @@ module.exports = {
   createResetToken,
   resetPasswordWithToken
 };
+

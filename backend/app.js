@@ -3,7 +3,9 @@ const path = require('path');
 
 const { createSessionMiddleware } = require('./config/session');    // Importer la configuration des sessions
 const authRoutes = require('./routes/authRoutes');                  // Importer les routes d'authentification
+const quizRoutes = require('./routes/quizRoutes');
 const { requireAuth } = require('./middleware/requireAuth');        // Importer le middleware pour protéger les routes privées
+const { requireRole } = require('./middleware/requireRole');
 
 const app = express();              // Créer l'application Express
 app.use(express.json());            // Permettre à Express de recevoir des données JSON
@@ -18,11 +20,18 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);   // Ajouter les routes d'authentification
+app.use('/api/quiz', quizRoutes);
 
 // Créer une route privée pour le Dashboard
-app.get('/api/dashboard', requireAuth, (req, res) => {
+app.get('/api/dashboard', requireAuth, requireRole('enseignant'), (req, res) => {
     res.json({
-        message: "Bienvenue sur votre tableau de bord."
+        message: "Bienvenue sur votre tableau de bord enseignant."
+    });
+});
+
+app.get('/api/dashboard-etudiant', requireAuth, requireRole('etudiant'), (req, res) => {
+    res.json({
+        message: "Bienvenue sur votre tableau de bord étudiant."
     });
 });
 
