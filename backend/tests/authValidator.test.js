@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const { validateLogin, validateLoginRequest } = require('../validators/authValidator');
 // Je vérifie qu'un nom d'utilisateur et un mot de passe valides sont acceptés
 test("accepte un nom d'utilisateur et mot de passe valides", () => {
-  assert.equal(validateLogin({nom_utilisateur:'Farim',password:'Farim'}).valid, true);
+  assert.equal(validateLogin({nom_utilisateur:'Farim',password:'Farim', role: 'enseignant'}).valid, true);
 });
 // Je vérifie que les champs vides sont refusés
 test('rejette les champs vides', () => {
@@ -29,7 +29,7 @@ test('rejette un type invalide', () => {
 });
 // Je vérifie que le middleware retire les espaces du nom sans changer le mot de passe
 test("middleware nettoie le nom d'utilisateur", () => {
-  const req = {body:{nom_utilisateur:'  Farim ',password:' Abc '}};
+  const req = {body:{nom_utilisateur:'  Farim ',password:' Abc ', role: 'enseignant'}};
   let called=false;
   validateLoginRequest(req, {}, () => {called=true});
   assert.equal(called,true);
