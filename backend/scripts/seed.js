@@ -10,8 +10,8 @@ const UTILISATEURS_TEST = [
   { nom_utilisateur: 'diane',     mot_de_passe: 'Diane',     prenom: 'Diane',     nom: 'Devi',       email: 'diane@exemple.com',     role: 'enseignant' },
   { nom_utilisateur: 'marilou',   mot_de_passe: 'Marilou',   prenom: 'Marilou',   nom: 'Scott',      email: 'marilou@exemple.com',   role: 'enseignant' },
   { nom_utilisateur: 'amine',     mot_de_passe: 'Amine',     prenom: 'Amine',     nom: 'Lemgandez',  email: 'amine@exemple.com',     role: 'enseignant' },
-  { nom_utilisateur: 'etudiant1', mot_de_passe: 'Etudiant1', prenom: 'Étudiant',  nom: 'Test 1',     email: null,                    role: 'etudiant' },
-  { nom_utilisateur: 'etudiant2', mot_de_passe: 'Etudiant2', prenom: 'Étudiant',  nom: 'Test 2',     email: null,                    role: 'etudiant' },
+  { nom_utilisateur: 'etudiant1', mot_de_passe: 'Etudiant1', prenom: 'Étudiant',  nom: 'Test 1',     email: 'etudiant1@exemple.com',                    role: 'etudiant' },
+  { nom_utilisateur: 'etudiant2', mot_de_passe: 'Etudiant2', prenom: 'Étudiant',  nom: 'Test 2',     email: 'etudiant2@exemple.com',                    role: 'etudiant' },
 ];
 
 async function seed() {
