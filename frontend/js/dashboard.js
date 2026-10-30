@@ -60,21 +60,33 @@ async function afficherMesQuiz(){
         }
 
         // Afficher chaque quiz
-        data.quiz.forEach(quiz => {
+        for(const quiz of data.quiz) {
             const carte = document.createElement('div');
             carte.classList.add('carte-quiz');
 
             const titre = document.createElement('h3');
             titre.textContent = quiz.titre;
-
-            const description = document.createElement('p');
-            description.textContent = quiz.description || 'Aucune description.';
-
             carte.appendChild(titre);
-            carte.appendChild(description);
 
+            const questions = await recupererQuestions(quiz.id);
+            const listeQuestions = document.createElement('div');
+
+            if(questions.length === 0) {
+                listeQuestions.textContent = 'Aucune question ajoutée.';
+            } else {
+                questions.forEach((question, index) => {
+                    const ligne = document.createElement('p');
+                    const type = question.type === 'qcm'
+                        ? 'QCM'
+                        : 'Vrai/Faux';
+
+                ligne.textContent = `${index + 1}. ${question.enonce} (${type})`;
+                listeQuestions.appendChild(ligne);
+            });
+        }
+            carte.appendChild(listeQuestions);
             listeQuiz.appendChild(carte);
-        });
+        }
 
     } catch (error) {
         console.error(error);
@@ -84,3 +96,14 @@ async function afficherMesQuiz(){
 
 // Vérifier la connexion au chargement de la page
 verifierConnexion();
+
+async function recupererQuestions(quizId) {
+    const response = await fetch(`/api/quizzes/${quizId}/questions`);
+
+    if (!response.ok) {
+        throw new Error('Impossible de récupérer les questions.');
+    }
+
+    const data = await response.json();
+    return data.questions;
+}
