@@ -1,5 +1,5 @@
 const formulaire = document.getElementById('formReset');
-const erreurNom = document.getElementById('erreurNom');
+const erreurEmail = document.getElementById('erreurEmail');
 const erreurNouveau = document.getElementById('erreurNouveau');
 const erreurConfirmation = document.getElementById('erreurConfirmation');
 const erreurGenerale = document.getElementById('erreurGenerale');
@@ -8,18 +8,18 @@ formulaire.addEventListener('submit', async (evenement) => {
     evenement.preventDefault();
 
     // Effacer les anciens messages
-    erreurNom.textContent = '';
+    erreurEmail.textContent = '';
     erreurNouveau.textContent = '';
     erreurConfirmation.textContent = '';
     erreurGenerale.textContent = '';
 
-    const nomUtilisateur = document.getElementById('nom_utilisateur').value.trim();
+    const email = document.getElementById('email').value.trim();
     const nouveau = document.getElementById('nouveau_mdp').value;
     const confirmation = document.getElementById('confirmation').value;
 
     // 1. Cases vides : le message s'affiche sous la case
-    if (!nomUtilisateur) {
-        erreurNom.textContent = "Le nom d'utilisateur est obligatoire.";
+    if (!email) {
+        erreurEmail.textContent = 'Le courriel est obligatoire.';
     }
     if (!nouveau) {
         erreurNouveau.textContent = 'Le nouveau mot de passe est obligatoire.';
@@ -28,7 +28,7 @@ formulaire.addEventListener('submit', async (evenement) => {
         erreurConfirmation.textContent = 'La confirmation est obligatoire.';
     }
 
-    if (erreurNom.textContent || erreurNouveau.textContent || erreurConfirmation.textContent) {
+    if (erreurEmail.textContent || erreurNouveau.textContent || erreurConfirmation.textContent) {
         return;
     }
 
@@ -46,14 +46,13 @@ formulaire.addEventListener('submit', async (evenement) => {
         return;
     }
 
-
-    //Envoyer la requête au serveur
+    // Envoyer la requête au serveur
     try {
         const reponse = await fetch('/api/auth/reset-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                nom_utilisateur: nomUtilisateur,
+                email: email,
                 nouveau_mot_de_passe: nouveau
             })
         });
@@ -62,7 +61,7 @@ formulaire.addEventListener('submit', async (evenement) => {
 
         if (!reponse.ok || !donnees.success) {
             if (reponse.status === 404) {
-                erreurNom.textContent = donnees.message;
+                erreurEmail.textContent = donnees.message;
             } else {
                 erreurGenerale.textContent = donnees.message || 'Changement impossible.';
             }

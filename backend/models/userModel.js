@@ -46,7 +46,7 @@ async function updatePassword(id, nouveauMotDePasse) {
 // Trouve un compte par courriel
 async function findByEmail(email) {
   const [rows] = await pool.execute(
-    'SELECT id, nom_utilisateur, prenom, email FROM users WHERE email = ? LIMIT 1',
+    'SELECT id, email FROM users WHERE email = ? LIMIT 1',
     [email]
   );
   return rows[0] || null;
