@@ -136,7 +136,7 @@ enregistrerQuestion.addEventListener('click', () => {
     }
 
     if (reponses.some(r => !r.texte || r.texte.length > 255)) {
-        messageQuestion.textContent = 'Chaque réponse doit contenir une réponse.';
+        messageQuestion.textContent = 'Veuillez remplir tous les champs de réponse.';
         return;
     }
 
