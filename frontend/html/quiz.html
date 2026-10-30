@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un quiz - Collège Ahuntsic</title>
+
+    <link rel="icon" type="image/png" href="../image/imagesAH1.png">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+</head>
+
+<body>
+
+    <!-- En-tête -->
+    <header class="entete">
+        <a href="/html/dashboard.html" class="entete-lien">
+            <img src="../image/imagesAH2.jpg"
+                 alt="Logo du Collège Ahuntsic"
+                 class="entete-logo">
+        </a>
+
+        <button type="button" id="logoutBtn"
+                class="bouton-deconnexion">
+            Déconnexion
+        </button>
+    </header>
+
+    
+<main class="contenu">
+
+  <div class="conteneur-creation">
+
+    <section class="carte-creation">
+      <h1>Créer un quiz</h1>
+      <p>Remplissez les informations pour créer votre évaluation.</p>
+
+      <!-- Informations du quiz -->
+      <form id="formCreerQuiz">
+
+        <div class="champ-formulaire">
+          <label for="titreQuiz">Titre du quiz</label>
+          <input
+            type="text"
+            id="titreQuiz"
+            name="titre"
+            maxlength="150"
+            required>
+        </div>
+
+        <!-- Ajouter une question -->
+        <h2>Ajouter une question</h2>
+
+        <div class="champ-formulaire">
+          <label for="enonceQuestion">Énoncé de la question</label>
+          <input
+            type="text"
+            id="enonceQuestion"
+            placeholder="Saisir votre question">
+        </div>
+
+        <div class="champ-formulaire">
+          <label for="typeQuestion">Type de question</label>
+
+          <select id="typeQuestion">
+            <option value="qcm">Choix multiples (QCM)</option>
+            <option value="vrai_faux">Vrai/Faux</option>
+          </select>
+        </div>
+
+        <!-- Réponses possibles -->
+        <fieldset class="section-reponses">
+          <legend>Réponses possibles</legend>
+
+          <p>Sélectionnez la bonne réponse.</p>
+
+          <div id="listeReponses"></div>
+
+          <button
+            type="button"
+            id="ajouterReponse"
+            class="bouton-secondaire">
+            + Ajouter une réponse
+          </button>
+        </fieldset>
+
+        <button
+          type="button"
+          id="enregistrerQuestion"
+          class="bouton-principal">
+          Enregistrer la question
+        </button>
+
+        <p id="messageQuestion" role="status"></p>
+
+      </form>
+    </section>
+
+    <!-- Aperçu du quiz -->
+    <aside class="carte-apercu">
+      <h2>Aperçu du quiz</h2>
+
+      <div id="apercuQuestions">
+        <p>Aucune question ajoutée.</p>
+      </div>
+
+      <button
+        type="button"
+        id="publierQuiz"
+        class="bouton-principal">
+        Publier le quiz
+      </button>
+
+      <p id="messageCreation" role="status"></p>
+    </aside>
+
+  </div>
+
+</main>
+
+
+    <footer class="pied-page">
+        <p>© 2026 Collège Ahuntsic. Tous droits réservés.</p>
+    </footer>
+
+    <script src="../js/logout.js"></script>
+    <script src="../js/quiz.js"></script>
+</body>
+
+</html>
