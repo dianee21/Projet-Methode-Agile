@@ -113,4 +113,27 @@ async function publishQuiz(quizId, enseignantId) {
   );
   return result.affectedRows === 1;
 }
-module.exports = { createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz, publishQuiz, MAX_REPONSES };
+
+// Sprint 3 : les étudiants voient seulement les quiz publiés (jamais les brouillons)
+async function findPublishedQuizzes() {
+  const [rows] = await pool.execute(
+    `SELECT q.id, q.titre, q.description, u.prenom AS enseignant
+     FROM quiz q
+     JOIN users u ON u.id = q.enseignant_id
+     WHERE q.statut = 'publie'
+     ORDER BY q.date_creation DESC, q.id DESC`
+  );
+  return rows;
+}
+// Sprint 3 : un étudiant ouvre un quiz -> null s'il n'est pas publié (accès bloqué)
+async function findPublishedQuiz(quizId) {
+  const [rows] = await pool.execute(
+    "SELECT id, titre, description FROM quiz WHERE id = ? AND statut = 'publie' LIMIT 1",
+    [quizId]
+  );
+  return rows[0] || null;
+}
+module.exports = {
+  createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz,
+  publishQuiz, findPublishedQuizzes, findPublishedQuiz, MAX_REPONSES
+};
