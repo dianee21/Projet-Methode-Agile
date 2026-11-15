@@ -1,22 +1,30 @@
-
+// Les comptes de test ne sont plus écrits ici
+// Ils sont dans scripts/comptes-test.json, qui jamais envoyé sur GitHub
+// Pour le créer faut copier comptes-test.exemple.json en comptes-test.json pis changer les mots de passe.
+const fs = require('fs');
+const path = require('path');
 const pool = require('../config/db');
 const { hashPassword } = require('../services/passwordService');
 
-// Comptes de test : enseignants et étudiants
-const UTILISATEURS_TEST = [
-  { nom_utilisateur: 'Farid',     mot_de_passe: 'Farid',     prenom: 'Farid',     nom: 'Enseignant', email: 'farid@exemple.com',     role: 'enseignant' },
-  { nom_utilisateur: 'christine', mot_de_passe: 'Christine', prenom: 'Christine', nom: 'Bautista',   email: 'christine@exemple.com', role: 'enseignant' },
-  { nom_utilisateur: 'thomas',    mot_de_passe: 'Thomas',    prenom: 'Thomas',    nom: 'Rodrigues',  email: 'thomas@exemple.com',    role: 'enseignant' },
-  { nom_utilisateur: 'diane',     mot_de_passe: 'Diane',     prenom: 'Diane',     nom: 'Devi',       email: 'diane@exemple.com',     role: 'enseignant' },
-  { nom_utilisateur: 'marilou',   mot_de_passe: 'Marilou',   prenom: 'Marilou',   nom: 'Scott',      email: 'marilou@exemple.com',   role: 'enseignant' },
-  { nom_utilisateur: 'amine',     mot_de_passe: 'Amine',     prenom: 'Amine',     nom: 'Lemgandez',  email: 'amine@exemple.com',     role: 'enseignant' },
-  { nom_utilisateur: 'etudiant1', mot_de_passe: 'Etudiant1', prenom: 'Étudiant',  nom: 'Test 1',     email: 'etudiant1@exemple.com',                    role: 'etudiant' },
-  { nom_utilisateur: 'etudiant2', mot_de_passe: 'Etudiant2', prenom: 'Étudiant',  nom: 'Test 2',     email: 'etudiant2@exemple.com',                    role: 'etudiant' },
-];
+const FICHIER_COMPTES = path.join(__dirname, 'comptes-test.json');
+// Lire les comptes de test dans le fichier local
+function lireComptes() {
+  if (!fs.existsSync(FICHIER_COMPTES)) {
+    throw new Error('Fichier scripts/comptes-test.json introuvable. Copiez comptes-test.exemple.json en comptes-test.json.');
+  }
+  const comptes = JSON.parse(fs.readFileSync(FICHIER_COMPTES, 'utf8').replace(/^\uFEFF/, ''));
+  // Même règle que la connexion : une majuscule obligatoire
+  for (const u of comptes) {
+    if (typeof u.mot_de_passe !== 'string' || !/[A-Z]/.test(u.mot_de_passe)) {
+      throw new Error(`Mot de passe invalide pour ${u.nom_utilisateur} (une majuscule obligatoire).`);
+    }
+  }
+  return comptes;
+}
 
 async function seed() {
   try {
-    for (const u of UTILISATEURS_TEST) {
+    for (const u of lireComptes()) {
       const hash = await hashPassword(u.mot_de_passe);
 
       // Crée les comptes manquants sans réinitialiser les mots de passe existants.
