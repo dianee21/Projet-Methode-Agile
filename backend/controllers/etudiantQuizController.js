@@ -21,13 +21,15 @@ async function listerQuizPublies(req, res, next) {
 }
 
 // Je bloque l'accès si le quiz n'est pas publié (brouillon ou inexistant).
+// J'envoie les questions sans les bonnes réponses.
 async function voirQuizPublie(req, res, next) {
   const quizId = readQuizId(req, res);
   if (quizId === null) return;
   try {
     const quiz = await quizModel.findPublishedQuiz(quizId);
     if (!quiz) return res.status(404).json({ message: "Ce quiz n'est pas disponible." });
-    return res.json({ quiz });
+    const questions = await quizModel.findQuestionsForStudent(quizId);
+    return res.json({ quiz, questions });
   } catch (error) {
     return next(error);
   }

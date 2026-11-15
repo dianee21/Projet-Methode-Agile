@@ -133,7 +133,35 @@ async function findPublishedQuiz(quizId) {
   );
   return rows[0] || null;
 }
+// Sprint 3 : les questions pour l'étudiant, SANS la bonne réponse (est_correcte reste dans la base)
+// Renvoie une liste vide si le quiz n'est pas publié
+async function findQuestionsForStudent(quizId) {
+  const [rows] = await pool.execute(
+    `SELECT qu.id AS question_id, qu.enonce, qu.type, r.id AS reponse_id, r.texte
+     FROM questions qu
+     JOIN quiz q ON q.id = qu.quiz_id
+     LEFT JOIN reponses r ON r.question_id = qu.id
+     WHERE qu.quiz_id = ? AND q.statut = 'publie'
+     ORDER BY qu.id, r.id`,
+    [quizId]
+  );
+  // On regroupe les lignes : une question avec la liste de ses réponses
+  const questions = [];
+  const parId = new Map();
+  for (const row of rows) {
+    if (!parId.has(row.question_id)) {
+      const q = { id: row.question_id, enonce: row.enonce, type: row.type, reponses: [] };
+      parId.set(row.question_id, q);
+      questions.push(q);
+    }
+    if (row.reponse_id) {
+      parId.get(row.question_id).reponses.push({ id: row.reponse_id, texte: row.texte });
+    }
+  }
+  return questions;
+}
+
 module.exports = {
   createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz,
-  publishQuiz, findPublishedQuizzes, findPublishedQuiz, MAX_REPONSES
+    publishQuiz, findPublishedQuizzes, findPublishedQuiz, findQuestionsForStudent, MAX_REPONSES
 };
