@@ -67,6 +67,15 @@ async function afficherMesQuiz(){
             const titre = document.createElement('h3');
             titre.textContent = quiz.titre;
             carte.appendChild(titre);
+            
+            // Afficher le statut du quiz
+            const statut = document.createElement('span');
+            statut.classList.add('statut-quiz');
+            if (quiz.statut === 'brouillon') {
+                statut.classList.add('statut-brouillon');
+                statut.textContent = 'Brouillon';
+            }
+            carte.appendChild(statut);
 
             const questions = await recupererQuestions(quiz.id);
             const listeQuestions = document.createElement('div');

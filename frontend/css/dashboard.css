@@ -184,6 +184,20 @@ body::before {
   font-size: 14px;
 }
 
+/* Statut du quiz */
+.statut-quiz {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.statut-brouillon {
+  background-color: #e4e4e4;
+  color: var(--gris);
+}
+
 @media (max-width: 600px) {
   .section-quiz {
     padding: 20px;

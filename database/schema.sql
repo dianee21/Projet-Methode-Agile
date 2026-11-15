@@ -20,10 +20,14 @@ CREATE TABLE IF NOT EXISTS users (
 ) ENGINE=InnoDB;
 
 -- un quiz appartient au prof
+-- Sprint 3 : un nouveau quiz est en brouillon (caché aux étudiants)
+-- Base déjà créée ? Exécuter une fois dans phpMyAdmin (onglet SQL) :
+--   ALTER TABLE quiz ADD COLUMN statut ENUM('brouillon', 'publie') NOT NULL DEFAULT 'brouillon' AFTER description;
 CREATE TABLE IF NOT EXISTS quiz (
   id             INT UNSIGNED  NOT NULL AUTO_INCREMENT,
   enseignant_id  INT UNSIGNED  NOT NULL,
   titre          VARCHAR(150)  NOT NULL,
+  statut         ENUM('brouillon', 'publie') NOT NULL DEFAULT 'brouillon',
   description    TEXT          NULL,
   date_creation  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

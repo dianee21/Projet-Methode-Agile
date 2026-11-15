@@ -9,20 +9,19 @@ async function createQuiz(enseignantId, titre, description) {
   );
   return result.insertId;
 }
-
-// Trouve un quiz seulement s'il appartient à cet enseignant (sinon null)
+// Trouve un quiz seulement s'il appartient à cet enseignant (sinon null), avec son statut
 async function findQuizById(quizId, enseignantId) {
   const [rows] = await pool.execute(
-    'SELECT id, titre, description, date_creation FROM quiz WHERE id = ? AND enseignant_id = ? LIMIT 1',
+        'SELECT id, titre, description, statut, date_creation FROM quiz WHERE id = ? AND enseignant_id = ? LIMIT 1',
     [quizId, enseignantId]
   );
   return rows[0] || null;
 }
 
-// récupère tous les quiz appartenant à un enseignant
+// récupère tous les quiz appartenant à un enseignant, avec leur statut
 async function findQuizzesByEnseignant(enseignantId) {
   const [rows] = await pool.execute(
-    'SELECT id, titre, description, date_creation FROM quiz WHERE enseignant_id = ? ORDER BY date_creation DESC, id DESC',
+        'SELECT id, titre, description, statut, date_creation FROM quiz WHERE enseignant_id = ? ORDER BY date_creation DESC, id DESC',
     [enseignantId]
   );
   return rows;
