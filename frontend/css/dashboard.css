@@ -184,6 +184,18 @@ body::before {
   font-size: 14px;
 }
 
+/* Quiz cliquable (page étudiant) */
+.lien-quiz {
+  display: block;
+  color: var(--noir);
+  text-decoration: none;
+}
+.lien-quiz:hover,
+.lien-quiz:focus-visible {
+  border-color: var(--rouge);
+  outline: none;
+}
+
 /* Statut du quiz */
 .statut-quiz {
   display: inline-block;
