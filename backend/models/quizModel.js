@@ -101,4 +101,16 @@ async function findQuestionsByQuiz(quizId) {
   return questions;
 }
 
-module.exports = { createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz, MAX_REPONSES };
+
+// publie un quiz (brouillon -> publié)
+// Refusé si le quiz n'est pas à cet enseignant, s'il est déjà publié ou s'il n'a aucune question
+async function publishQuiz(quizId, enseignantId) {
+  const [result] = await pool.execute(
+    `UPDATE quiz SET statut = 'publie'
+     WHERE id = ? AND enseignant_id = ? AND statut = 'brouillon'
+       AND EXISTS (SELECT 1 FROM questions WHERE questions.quiz_id = quiz.id)`,
+    [quizId, enseignantId]
+  );
+  return result.affectedRows === 1;
+}
+module.exports = { createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz, publishQuiz, MAX_REPONSES };
