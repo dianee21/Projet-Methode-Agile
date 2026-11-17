@@ -1,0 +1,5 @@
+[
+  { "nom_utilisateur": "Farid",     "mot_de_passe": "ChangeMoi1", "prenom": "Farid",    "nom": "Enseignant", "email": "farid@exemple.com",     "role": "enseignant" },
+  { "nom_utilisateur": "etudiant1", "mot_de_passe": "ChangeMoi1", "prenom": "Étudiant", "nom": "Test 1",     "email": "etudiant1@exemple.com", "role": "etudiant" },
+  { "nom_utilisateur": "etudiant2", "mot_de_passe": "ChangeMoi1", "prenom": "Étudiant", "nom": "Test 2",     "email": "etudiant2@exemple.com", "role": "etudiant" }
+]

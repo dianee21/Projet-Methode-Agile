@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');                  // Importer 
 const quizCreationRoutes = require('./routes/quizCreationRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 const quizRoutes = require('./routes/quizRoutes');
+const etudiantRoutes = require('./routes/etudiantRoutes');      // Importer les routes des étudiants (quiz publiés)
 const { requireAuth } = require('./middleware/requireAuth');        // Importer le middleware pour protéger les routes privées
 const { requireRole } = require('./middleware/requireRole');
 
@@ -25,6 +26,7 @@ app.use('/api/auth', authRoutes);   // Ajouter les routes d'authentification
 app.use('/api/quizzes', quizCreationRoutes);
 app.use('/api/quizzes', questionRoutes);
 app.use('/api/quiz', quizRoutes);
+app.use('/api/etudiant', etudiantRoutes);
 
 // Créer une route privée pour le Dashboard
 app.get('/api/dashboard', requireAuth, requireRole('enseignant'), (req, res) => {
