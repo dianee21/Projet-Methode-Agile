@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
   id               INT UNSIGNED  NOT NULL AUTO_INCREMENT,
   nom_utilisateur  VARCHAR(50)   NOT NULL,
   mot_de_passe     VARCHAR(255)  NOT NULL,
+  date_modification_mdp DATETIME NULL,
   prenom           VARCHAR(100)  NULL,
   nom              VARCHAR(100)  NULL,
   email            VARCHAR(255)  NULL,
@@ -18,6 +19,10 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE KEY uq_users_nom_utilisateur (nom_utilisateur),
   UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB;
+
+DROP TRIGGER IF EXISTS trg_users_date_modification_mdp;
+CREATE TRIGGER trg_users_date_modification_mdp BEFORE UPDATE ON users FOR EACH ROW
+SET NEW.date_modification_mdp = IF(NEW.mot_de_passe <> OLD.mot_de_passe, NOW(), OLD.date_modification_mdp);
 
 -- un quiz appartient au prof
 -- Sprint 3 : un nouveau quiz est en brouillon (caché aux étudiants)
