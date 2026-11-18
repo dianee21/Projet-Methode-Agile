@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz étudiant</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="../js/quiz-etudiant.js" defer></script>
+    <script src="../js/logout.js" defer></script>
+</head>
+<body>
+    <header class="entete">
+        <a href="/html/dashboard-etudiant.html" class="entete-lien" aria-label="Retour au tableau de bord">
+            <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="entete-logo">
+        </a>
+        <button type="button" id="logoutBtn" class="bouton-deconnexion">Déconnexion</button>
+    </header>
+    <main class="contenu">
+
+        <section class="carte-bienvenue">
+            <a href="dashboard-etudiant.html">Retour aux quiz disponibles</a>
+
+            <h1 id="titreQuiz">Quiz étudiant</h1>
+            <p id="descriptionQuiz" hidden></p>
+            <p id="etatQuiz" role="status">Chargement du quiz</p>
+
+            <form id="formulaireQuiz" aria-labelledby="titreQuiz" hidden>
+                <div id="questionsQuiz"></div>
+            </form>
+        </section>
+    </main>
+    <footer class="pied-page">
+        <p>© 2026 Collège Ahuntsic. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
