@@ -60,7 +60,7 @@ formulaire.addEventListener('submit', async (evenement) => {
         const donnees = await reponse.json();
 
         if (!reponse.ok || !donnees.success) {
-            if (reponse.status === 404) {
+            if (reponse.status === 404 || reponse.status === 403) {
                 erreurEmail.textContent = donnees.message;
             } else {
                 erreurGenerale.textContent = donnees.message || 'Changement impossible.';
