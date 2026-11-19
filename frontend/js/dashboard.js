@@ -126,8 +126,44 @@ function creerBoutonsQuiz(quiz, carte) {
         window.location.href = `/html/quiz.html?id=${quiz.id}`;
     });
 
-    actions.append(boutonModifier);
+ const boutonSupprimer = document.createElement('button');
+    boutonSupprimer.type = 'button';
+    boutonSupprimer.classList.add('bouton-supprimer');
+    boutonSupprimer.textContent = 'Supprimer';
+    boutonSupprimer.addEventListener('click', () => supprimerQuiz(quiz, carte, boutonSupprimer));
+
+    actions.append(boutonModifier, boutonSupprimer);
     return actions;
+}
+
+// Supprimer un quiz (bouton Supprimer)
+async function supprimerQuiz(quiz, carte, bouton) {
+    bouton.disabled = true;
+
+    try {
+        const response = await fetch(`/api/quiz/${quiz.id}`, { method: 'DELETE' });
+
+        if (response.status === 401 || response.status === 403) {
+            window.location.href = '/html/login.html';
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Suppression impossible.');
+        }
+
+        // On enlève la carte de la page
+        carte.remove();
+
+        const listeQuiz = document.getElementById('listeQuiz');
+        if (listeQuiz.children.length === 0) {
+            listeQuiz.textContent = 'Vous n’avez pas encore créé de quiz.';
+        }
+    } catch (error) {
+        console.error(error);
+        bouton.disabled = false;
+        alert('Impossible de supprimer le quiz.');
+    }
 }
 
 // Vérifier la connexion au chargement de la page

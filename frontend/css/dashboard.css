@@ -289,6 +289,17 @@ body::before {
   border-color: var(--rouge-fonce);
 }
 
+.bouton-supprimer {
+  background-color: var(--blanc);
+  color: var(--rouge);
+  border: 2px solid var(--rouge);
+}
+
+.bouton-supprimer:hover {
+  background-color: var(--rouge);
+  color: var(--blanc);
+}
+
 .bouton-annuler {
   background-color: var(--blanc);
   color: var(--noir);

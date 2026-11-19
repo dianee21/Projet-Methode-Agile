@@ -212,7 +212,16 @@ async function findQuestionsForStudent(quizId) {
   return questions;
 }
 
+// Supprimer un quiz de l'enseignant (les questions et réponses partent avec, grâce au CASCADE)
+async function deleteQuiz(quizId, enseignantId) {
+  const [result] = await pool.execute(
+    'DELETE FROM quiz WHERE id = ? AND enseignant_id = ?',
+    [quizId, enseignantId]
+  );
+  return result.affectedRows === 1;
+}
+
 module.exports = {
   createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz,
-    publishQuiz, findPublishedQuizzes, findPublishedQuiz, findQuestionsForStudent, updateQuiz, MAX_REPONSES
+    publishQuiz, deleteQuiz, findPublishedQuizzes, findPublishedQuiz, findQuestionsForStudent, updateQuiz, MAX_REPONSES
 };

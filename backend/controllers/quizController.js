@@ -1,4 +1,4 @@
-const { findQuizzesByEnseignant, publishQuiz, updateQuiz } = require('../models/quizModel');
+const { findQuizzesByEnseignant, publishQuiz, updateQuiz, deleteQuiz } = require('../models/quizModel');
 const { validateQuestion } = require('../validators/questionValidator');
 
 // récupérer la liste des quiz de l'enseignant connecté
@@ -84,4 +84,22 @@ async function modifierQuiz(req, res, next) {
     }
 }
 
-module.exports = { getMesQuiz, publierQuiz, modifierQuiz };
+// supprimer un quiz de l'enseignant connecté (bouton Supprimer)
+async function supprimerQuiz(req, res, next) {
+    try {
+        const quizId = lireQuizId(req);
+        if (quizId === null) {
+            return res.status(400).json({ message: 'Identifiant du quiz invalide.' });
+        }
+
+        const supprime = await deleteQuiz(quizId, req.session.userId);
+        if (!supprime) {
+            return res.status(404).json({ message: 'Quiz introuvable.' });
+        }
+        return res.status(200).json({ message: 'Quiz supprimé.' });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { getMesQuiz, publierQuiz, modifierQuiz, supprimerQuiz };
