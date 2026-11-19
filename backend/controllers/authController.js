@@ -28,7 +28,7 @@ async function login(req, res, next) {
                 message: role === 'etudiant'
                     ? "Ce compte n'est pas un compte étudiant."
                     : "Ce compte n'est pas un compte enseignant."
-            });s
+            });
         }
 
         // Créer une session pour l'utilisateur
@@ -78,6 +78,13 @@ async function resetPassword(req, res, next) {
 
         if (!user) {
             return res.status(404).json({ message: "Ce courriel n'existe pas." });
+        }
+
+        // Seuls les enseignants peuvent changer leur mot de passe ici
+        if (user.role !== 'enseignant') {
+            return res.status(403).json({
+                message: "Seuls les enseignants peuvent réinitialiser leur mot de passe."
+            });
         }
 
         // updatePassword chiffre déjà le mot de passe : on lui envoie le texte normal
