@@ -114,6 +114,57 @@ async function publishQuiz(quizId, enseignantId) {
   return result.affectedRows === 1;
 }
 
+async function updateQuiz(quizId, enseignantId, titre, description, questions) {
+  if (!questions) {
+    const [result] = await pool.execute(
+      'UPDATE quiz SET titre = ?, description = ? WHERE id = ? AND enseignant_id = ?',
+      [titre, description || null, quizId, enseignantId]
+    );
+    return result.affectedRows === 1;
+  }
+
+  for (const q of questions) verifierReponses(q.type, q.reponses);
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const [result] = await conn.execute(
+      'UPDATE quiz SET titre = ?, description = ? WHERE id = ? AND enseignant_id = ?',
+      [titre, description || null, quizId, enseignantId]
+    );
+    if (result.affectedRows !== 1) {
+      await conn.rollback();
+      return false;
+    }
+
+    // On supprime les anciennes questions (leurs réponses partent aussi : ON DELETE CASCADE)
+    await conn.execute('DELETE FROM questions WHERE quiz_id = ?', [quizId]);
+
+    // On enregistre les nouvelles questions avec leurs réponses
+    for (const q of questions) {
+      const [question] = await conn.execute(
+        'INSERT INTO questions (quiz_id, enonce, type) VALUES (?, ?, ?)',
+        [quizId, q.enonce, q.type]
+      );
+      for (const r of q.reponses) {
+        await conn.execute(
+          'INSERT INTO reponses (question_id, texte, est_correcte) VALUES (?, ?, ?)',
+          [question.insertId, r.texte, r.est_correcte ? 1 : 0]
+        );
+      }
+    }
+
+    await conn.commit();
+    return true;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
+
 // Sprint 3 : les étudiants voient seulement les quiz publiés (jamais les brouillons)
 async function findPublishedQuizzes() {
   const [rows] = await pool.execute(
@@ -163,5 +214,5 @@ async function findQuestionsForStudent(quizId) {
 
 module.exports = {
   createQuiz, findQuizById, findQuizzesByEnseignant, verifierBonneReponse, addQuestion, findQuestionsByQuiz,
-    publishQuiz, findPublishedQuizzes, findPublishedQuiz, findQuestionsForStudent, MAX_REPONSES
+    publishQuiz, findPublishedQuizzes, findPublishedQuiz, findQuestionsForStudent, updateQuiz, MAX_REPONSES
 };

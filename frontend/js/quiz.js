@@ -1,5 +1,12 @@
 const MAX_REPONSES = 5;
 
+// Mode modification : la page est ouverte avec ?id=12 (bouton Modifier du dashboard)
+const quizId = new URLSearchParams(window.location.search).get('id');
+const modeModification = quizId !== null;
+let descriptionQuiz = null;        // la description du quiz est gardée telle quelle
+let indexEnModification = null;    // question en cours de modification 
+let titreGarde = '';               // titre du quiz gardé en mémoire (mode modification)
+
 const typeQuestion = document.getElementById('typeQuestion');
 const listeReponses = document.getElementById('listeReponses');
 const ajouterReponse = document.getElementById('ajouterReponse');
@@ -102,9 +109,56 @@ function afficherApercu() {
         const resultat = document.createElement('p');
         resultat.textContent = `Bonne réponse : ${bonneReponse.texte}`;
 
-        carte.append(titre, type, resultat);
+        // Bouton pour modifier cette question
+        const actions = document.createElement('div');
+        actions.className = 'actions-apercu';
+
+        const boutonModifierQuestion = document.createElement('button');
+        boutonModifierQuestion.type = 'button';
+        boutonModifierQuestion.textContent = 'Modifier';
+        boutonModifierQuestion.addEventListener('click', () => modifierQuestion(index));
+
+        actions.append(boutonModifierQuestion);
+
+        carte.append(titre, type, resultat, actions);
         apercuQuestions.appendChild(carte);
     });
+}
+
+// Vider le formulaire de question (retour à une nouvelle question)
+function reinitialiserFormulaireQuestion() {
+    document.getElementById('enonceQuestion').value = '';
+    typeQuestion.value = 'qcm';
+    indexEnModification = null;
+    enregistrerQuestion.textContent = 'Enregistrer la question';
+    initialiserReponses();
+}
+
+// Remettre une question de l'aperçu dans le formulaire pour la modifier
+function modifierQuestion(index) {
+    const question = questions[index];
+    indexEnModification = index;
+
+    document.getElementById('enonceQuestion').value = question.enonce;
+    typeQuestion.value = question.type;
+    initialiserReponses();
+
+    // QCM : on recrée autant de lignes que de réponses
+    if (question.type === 'qcm') {
+        listeReponses.replaceChildren();
+        question.reponses.forEach(reponse => creerChampReponse(reponse.texte));
+        mettreAJourBouton();
+    }
+
+    // On coche la bonne réponse
+    const ronds = listeReponses.querySelectorAll('input[type="radio"]');
+    question.reponses.forEach((reponse, i) => {
+        ronds[i].checked = reponse.est_correcte;
+    });
+
+    enregistrerQuestion.textContent = 'Mettre à jour la question';
+    messageQuestion.textContent = `Modification de la question ${index + 1}.`;
+    document.getElementById('enonceQuestion').focus();
 }
 
 // Valider une question et ses réponses avant de l'ajouter
@@ -145,23 +199,124 @@ enregistrerQuestion.addEventListener('click', () => {
         return;
     }
 
-    questions.push({
+    const question = {
         enonce,
         type: typeQuestion.value,
         reponses
-    });
+    };
 
-    document.getElementById('enonceQuestion').value = '';
-    initialiserReponses();
+    let confirmation;
+
+    if (indexEnModification === null) {
+        questions.push(question);
+        confirmation = 'Question ajoutée à l’aperçu.';
+    } else {
+        questions[indexEnModification] = question;
+        confirmation = 'Question modifiée.';
+    }
+
+    reinitialiserFormulaireQuestion();
     afficherApercu();
 
-    messageQuestion.textContent = 'Question ajoutée à l’aperçu.';
+    messageQuestion.textContent = confirmation;
 });
 
 
 // S2 - Valider et enregistrer le formulaire complet
 const boutonPublier = document.getElementById('publierQuiz');
 const messageCreation = document.getElementById('messageCreation');
+
+// Mode modification : on change les textes de la page et on charge le quiz
+if (modeModification) {
+    document.title = 'Modifier le quiz - Collège Ahuntsic';
+    document.querySelector('.carte-creation h1').textContent = 'Modifier le quiz';
+    document.querySelector('.carte-creation > p').textContent =
+        'Changez le titre, les questions ou les réponses, puis enregistrez.';
+    boutonPublier.textContent = 'Enregistrer les modifications';
+    chargerQuizAModifier();
+}
+
+// Aller chercher le quiz (titre, questions, réponses) et le mettre dans la page
+async function chargerQuizAModifier() {
+    try {
+        const response = await fetch(`/api/quizzes/${quizId}/questions`);
+
+        if (response.status === 401 || response.status === 403) {
+            window.location.href = '/html/login.html';
+            return;
+        }
+
+        if (!response.ok) {
+            messageCreation.textContent = 'Quiz introuvable.';
+            boutonPublier.disabled = true;
+            return;
+        }
+
+        const data = await response.json();
+
+        document.getElementById('titreQuiz').value = data.quiz.titre;
+        descriptionQuiz = data.quiz.description;
+
+        data.questions.forEach(question => {
+            questions.push({
+                enonce: question.enonce,
+                type: question.type,
+                reponses: question.reponses.map(r => ({
+                    texte: r.texte,
+                    est_correcte: r.est_correcte
+                }))
+            });
+        });
+
+        afficherApercu();
+
+        // On remplit tout de suite le formulaire avec la première question
+        if (questions.length > 0) {
+            modifierQuestion(0);
+        }
+    } catch (error) {
+        console.error(error);
+        messageCreation.textContent = 'Impossible de charger le quiz.';
+        boutonPublier.disabled = true;
+    }
+}
+
+// Envoyer le quiz modifié au serveur (titre + toutes les questions)
+async function enregistrerModifications(titre) {
+    boutonPublier.disabled = true;
+    messageCreation.textContent = 'Enregistrement en cours...';
+
+    try {
+        const response = await fetch(`/api/quiz/${quizId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                titre,
+                description: descriptionQuiz,
+                questions
+            })
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            window.location.href = '/html/login.html';
+            return;
+        }
+
+        if (!response.ok) {
+            const data = await response.json();
+            messageCreation.textContent = data.message || 'Impossible d’enregistrer les modifications.';
+            boutonPublier.disabled = false;
+            return;
+        }
+
+        // Retour au Dashboard
+        window.location.href = '/html/dashboard.html';
+    } catch (error) {
+        console.error(error);
+        messageCreation.textContent = 'Impossible d’enregistrer les modifications.';
+        boutonPublier.disabled = false;
+    }
+}
 
 boutonPublier.addEventListener('click', async () => {
     const titre = document.getElementById('titreQuiz').value.trim();
@@ -182,10 +337,22 @@ boutonPublier.addEventListener('click', async () => {
         return;
     }
 
+    // Modification d'un quiz existant : on envoie tout au serveur et on s'arrête ici
+    if (modeModification) {
+        if (indexEnModification !== null) {
+            messageCreation.textContent =
+                'Terminez d’abord la modification de la question.';
+            return;
+        }
+
+        await enregistrerModifications(titre);
+        return;
+    }
+
     boutonPublier.disabled = true;
     messageCreation.textContent = 'Enregistrement en cours...';
 
-    let quizId = null;
+    let nouveauQuizId = null;
 
     try {
         // Créer le quiz avec l'API d'Amine
@@ -203,12 +370,12 @@ boutonPublier.addEventListener('click', async () => {
         }
 
         const dataQuiz = await responseQuiz.json();
-        quizId = dataQuiz.quiz.id;
+        nouveauQuizId = dataQuiz.quiz.id;
 
         // Enregistrer chaque question et ses réponses
         for (const question of questions) {
             const responseQuestion = await fetch(
-                `/api/quizzes/${quizId}/questions`,
+                `/api/quizzes/${nouveauQuizId}/questions`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -230,7 +397,7 @@ boutonPublier.addEventListener('click', async () => {
     } catch (error) {
         console.error(error);
 
-        messageCreation.textContent = quizId === null
+        messageCreation.textContent = nouveauQuizId === null
             ? 'Impossible de créer le quiz. Vérifiez votre connexion.'
             : 'Le quiz a été créé, mais certaines questions n’ont pas pu être enregistrées. Vérifiez-le avant de réessayer.';
 

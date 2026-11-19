@@ -67,6 +67,14 @@ async function afficherMesQuiz(){
             const titre = document.createElement('h3');
             titre.textContent = quiz.titre;
             carte.appendChild(titre);
+
+            // Afficher la description si elle existe
+            if (quiz.description) {
+                const description = document.createElement('p');
+                description.classList.add('description-quiz');
+                description.textContent = quiz.description;
+                carte.appendChild(description);
+            }
             
             // Afficher le statut du quiz
             const statut = document.createElement('span');
@@ -94,6 +102,7 @@ async function afficherMesQuiz(){
             });
         }
             carte.appendChild(listeQuestions);
+            carte.appendChild(creerBoutonsQuiz(quiz, carte));   // bouton Modifier
             listeQuiz.appendChild(carte);
         }
 
@@ -101,6 +110,24 @@ async function afficherMesQuiz(){
         console.error(error);
         listeQuiz.textContent = 'Impossible de charger les quiz.';
     }
+}
+
+// Créer le bouton Modifier d'une carte de quiz
+function creerBoutonsQuiz(quiz, carte) {
+    const actions = document.createElement('div');
+    actions.classList.add('actions-quiz');
+
+    const boutonModifier = document.createElement('button');
+    boutonModifier.type = 'button';
+    boutonModifier.classList.add('bouton-modifier');
+    boutonModifier.textContent = 'Modifier';
+    // Ouvrir la page du quiz avec tout son contenu (titre, questions, réponses)
+    boutonModifier.addEventListener('click', () => {
+        window.location.href = `/html/quiz.html?id=${quiz.id}`;
+    });
+
+    actions.append(boutonModifier);
+    return actions;
 }
 
 // Vérifier la connexion au chargement de la page
