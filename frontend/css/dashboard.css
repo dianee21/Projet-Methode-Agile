@@ -255,3 +255,57 @@ body::before {
 #titreQuiz {
   margin-top: 0.5rem;
 }
+
+/* Bouton Modifier d'un quiz */
+.description-quiz {
+  margin: 0 0 8px;
+  color: var(--gris);
+  font-size: 14px;
+}
+
+.actions-quiz {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.actions-quiz button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.bouton-modifier {
+  background-color: var(--rouge);
+  color: var(--blanc);
+  border: 2px solid var(--rouge);
+}
+
+.bouton-modifier:hover {
+  background-color: var(--rouge-fonce);
+  border-color: var(--rouge-fonce);
+}
+
+.bouton-annuler {
+  background-color: var(--blanc);
+  color: var(--noir);
+  border: 2px solid var(--gris);
+}
+
+.bouton-annuler:hover {
+  background-color: var(--gris-clair);
+}
+
+.actions-quiz button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.message-quiz {
+  margin: 10px 0 0;
+  color: var(--rouge);
+  font-size: 13px;
+}
