@@ -5,7 +5,7 @@ async function verifierConnexion() {
         const response = await fetch('/api/dashboard');
 
         // Rediriger si l'utilisateur n'est pas connecté
-          if (response.status === 401 || response.status === 403) { 
+        if (response.status === 401 || response.status === 403) {
             window.location.href = '/html/login.html';
             return;
         }
@@ -25,8 +25,8 @@ async function verifierConnexion() {
     }
 }
 
- // Récupérer et afficher les quiz de l'enseignant connecté
-async function afficherMesQuiz(){
+// Récupérer et afficher les quiz de l'enseignant connecté
+async function afficherMesQuiz() {
     const listeQuiz = document.getElementById('listeQuiz');
 
     if (!listeQuiz) {
@@ -60,7 +60,7 @@ async function afficherMesQuiz(){
         }
 
         // Afficher chaque quiz
-        for(const quiz of data.quiz) {
+        for (const quiz of data.quiz) {
             const carte = document.createElement('div');
             carte.classList.add('carte-quiz');
 
@@ -75,7 +75,7 @@ async function afficherMesQuiz(){
                 description.textContent = quiz.description;
                 carte.appendChild(description);
             }
-            
+
             // Afficher le statut du quiz
             const statut = document.createElement('span');
             statut.classList.add('statut-quiz');
@@ -88,7 +88,7 @@ async function afficherMesQuiz(){
             const questions = await recupererQuestions(quiz.id);
             const listeQuestions = document.createElement('div');
 
-            if(questions.length === 0) {
+            if (questions.length === 0) {
                 listeQuestions.textContent = 'Aucune question ajoutée.';
             } else {
                 questions.forEach((question, index) => {
@@ -97,12 +97,13 @@ async function afficherMesQuiz(){
                         ? 'QCM'
                         : 'Vrai/Faux';
 
-                ligne.textContent = `${index + 1}. ${question.enonce} (${type})`;
-                listeQuestions.appendChild(ligne);
-            });
-        }
+                    ligne.textContent = `${index + 1}. ${question.enonce} (${type})`;
+                    listeQuestions.appendChild(ligne);
+                });
+            }
+
             carte.appendChild(listeQuestions);
-            carte.appendChild(creerBoutonsQuiz(quiz, carte));   // bouton Modifier
+            carte.appendChild(creerBoutonsQuiz(quiz, carte));   // boutons Modifier et Supprimer
             listeQuiz.appendChild(carte);
         }
 
@@ -112,7 +113,7 @@ async function afficherMesQuiz(){
     }
 }
 
-// Créer le bouton Modifier d'une carte de quiz
+// Créer les boutons Modifier et Supprimer d'une carte de quiz
 function creerBoutonsQuiz(quiz, carte) {
     const actions = document.createElement('div');
     actions.classList.add('actions-quiz');
@@ -126,14 +127,57 @@ function creerBoutonsQuiz(quiz, carte) {
         window.location.href = `/html/quiz.html?id=${quiz.id}`;
     });
 
- const boutonSupprimer = document.createElement('button');
+    const boutonSupprimer = document.createElement('button');
     boutonSupprimer.type = 'button';
     boutonSupprimer.classList.add('bouton-supprimer');
     boutonSupprimer.textContent = 'Supprimer';
-    boutonSupprimer.addEventListener('click', () => supprimerQuiz(quiz, carte, boutonSupprimer));
+    boutonSupprimer.addEventListener('click', () => afficherConfirmation(quiz, carte));
 
     actions.append(boutonModifier, boutonSupprimer);
     return actions;
+}
+
+// Fenêtre de confirmation avant de supprimer
+function afficherConfirmation(quiz, carte) {
+    const fenetre = document.createElement('dialog');
+    fenetre.classList.add('fenetre-confirmation');
+
+    const question = document.createElement('h2');
+    question.textContent = 'Voulez-vous supprimer ce quiz ?';
+
+    const nomQuiz = document.createElement('p');
+    nomQuiz.classList.add('nom-quiz-fenetre');
+    nomQuiz.textContent = `« ${quiz.titre} »`;
+
+    const avertissement = document.createElement('p');
+    avertissement.textContent = 'Cette action est irréversible.';
+
+    const actions = document.createElement('div');
+    actions.classList.add('actions-fenetre');
+
+    const boutonOui = document.createElement('button');
+    boutonOui.type = 'button';
+    boutonOui.classList.add('bouton-supprimer');
+    boutonOui.textContent = 'Oui, supprimer';
+    boutonOui.addEventListener('click', async () => {
+        await supprimerQuiz(quiz, carte, boutonOui);
+        fenetre.close();
+    });
+
+    const boutonNon = document.createElement('button');
+    boutonNon.type = 'button';
+    boutonNon.classList.add('bouton-annuler');
+    boutonNon.textContent = 'Non';
+    boutonNon.addEventListener('click', () => fenetre.close());
+
+    actions.append(boutonOui, boutonNon);
+    fenetre.append(question, nomQuiz, avertissement, actions);
+
+    // Quand la fenêtre se ferme, on l'enlève de la page
+    fenetre.addEventListener('close', () => fenetre.remove());
+
+    document.body.appendChild(fenetre);
+    fenetre.showModal();
 }
 
 // Supprimer un quiz (bouton Supprimer)
@@ -166,9 +210,6 @@ async function supprimerQuiz(quiz, carte, bouton) {
     }
 }
 
-// Vérifier la connexion au chargement de la page
-verifierConnexion();
-
 async function recupererQuestions(quizId) {
     const response = await fetch(`/api/quizzes/${quizId}/questions`);
 
@@ -179,3 +220,6 @@ async function recupererQuestions(quizId) {
     const data = await response.json();
     return data.questions;
 }
+
+// Vérifier la connexion au chargement de la page
+verifierConnexion();

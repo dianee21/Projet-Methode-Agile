@@ -265,8 +265,14 @@ body::before {
 
 .actions-quiz {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 14px;
+}
+
+.actions-quiz .message-quiz {
+  width: 100%;
+  margin: 0;
 }
 
 .actions-quiz button {
@@ -319,4 +325,59 @@ body::before {
   margin: 10px 0 0;
   color: var(--rouge);
   font-size: 13px;
+}
+
+/* Fenêtre de confirmation de suppression */
+.fenetre-confirmation {
+  width: 420px;
+  max-width: 90%;
+  padding: 28px 30px;
+  background-color: var(--blanc);
+  color: var(--noir);
+  border: none;
+  border-top: 6px solid var(--rouge);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.fenetre-confirmation::backdrop {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.fenetre-confirmation h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.fenetre-confirmation p {
+  margin: 0 0 8px;
+  color: var(--gris);
+  font-size: 14px;
+}
+
+.fenetre-confirmation .nom-quiz-fenetre {
+  color: var(--noir);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.actions-fenetre {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.actions-fenetre button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions-fenetre .bouton-annuler:hover {
+  background-color: #d9d9d9;
+  border-color: var(--noir);
 }
