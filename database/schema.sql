@@ -72,3 +72,27 @@ CREATE TABLE IF NOT EXISTS reponses (
    UNIQUE KEY uq_reset_token (token_hash),
    CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
  ) ENGINE=InnoDB;
+
+-- côté étudiant
+-- Table des soumissions des étudiants
+CREATE TABLE soumissions (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    etudiant_id INT UNSIGNED NOT NULL,
+    quiz_id INT UNSIGNED NOT NULL,
+    date_soumission DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (etudiant_id) REFERENCES users(id),
+    FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+);
+
+-- Table des réponses soumises par les étudiants
+CREATE TABLE reponses_etudiants (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    soumission_id INT UNSIGNED NOT NULL,
+    question_id INT UNSIGNED NOT NULL,
+    reponse_id INT UNSIGNED NOT NULL,
+
+    FOREIGN KEY (soumission_id) REFERENCES soumissions(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id),
+    FOREIGN KEY (reponse_id) REFERENCES reponses(id)
+);
