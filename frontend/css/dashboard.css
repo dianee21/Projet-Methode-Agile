@@ -210,6 +210,11 @@ body::before {
   color: var(--gris);
 }
 
+.statut-publie {
+  background-color: #d4edda;
+  color: #155724;
+}
+
 @media (max-width: 600px) {
   .section-quiz {
     padding: 20px;

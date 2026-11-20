@@ -82,6 +82,9 @@ async function afficherMesQuiz() {
             if (quiz.statut === 'brouillon') {
                 statut.classList.add('statut-brouillon');
                 statut.textContent = 'Brouillon';
+            } else if(quiz.statut === 'publie') {
+                statut.classList.add('statut-publie');
+                statut.textContent = 'Publié';
             }
             carte.appendChild(statut);
 
