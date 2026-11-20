@@ -118,11 +118,37 @@ function afficherApercu() {
         boutonModifierQuestion.textContent = 'Modifier';
         boutonModifierQuestion.addEventListener('click', () => modifierQuestion(index));
 
-        actions.append(boutonModifierQuestion);
+        const boutonSupprimerQuestion = document.createElement('button');
+        boutonSupprimerQuestion.type = 'button';
+        boutonSupprimerQuestion.textContent = 'Supprimer';
+        boutonSupprimerQuestion.addEventListener('click', () => supprimerQuestion(index));
+
+        actions.append(boutonModifierQuestion, boutonSupprimerQuestion);
 
         carte.append(titre, type, resultat, actions);
         apercuQuestions.appendChild(carte);
     });
+}
+
+function supprimerQuestion(index) {
+    if (modeModification && questions.length === 1) {
+        alert('Ajouter une autre question avant de supprimer la dernière.');
+        return;
+    }
+
+    if (!window.confirm('Voulez-vous supprimer cette question ?')) {
+        return;
+    }
+
+    questions.splice(index, 1);
+
+    if (indexEnModification === index) {
+        reinitialiserFormulaireQuestion();
+    } else if (indexEnModification !== null && indexEnModification > index) {
+        indexEnModification--;
+    }
+
+    afficherApercu();
 }
 
 // Vider le formulaire de question (retour à une nouvelle question)
