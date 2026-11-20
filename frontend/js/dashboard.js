@@ -82,6 +82,9 @@ async function afficherMesQuiz() {
             if (quiz.statut === 'brouillon') {
                 statut.classList.add('statut-brouillon');
                 statut.textContent = 'Brouillon';
+            } else if(quiz.statut === 'publie') {
+                statut.classList.add('statut-publie');
+                statut.textContent = 'Publié';
             }
             carte.appendChild(statut);
 
@@ -92,13 +95,29 @@ async function afficherMesQuiz() {
                 listeQuestions.textContent = 'Aucune question ajoutée.';
             } else {
                 questions.forEach((question, index) => {
-                    const ligne = document.createElement('p');
+                    const blocQuestion = document.createElement('div');
+                    blocQuestion.classList.add('question-quiz');
+    
+                    // Afficher l'énoncé et le type de la question
+                    const enonce = document.createElement('p');
                     const type = question.type === 'qcm'
-                        ? 'QCM'
-                        : 'Vrai/Faux';
-
-                    ligne.textContent = `${index + 1}. ${question.enonce} (${type})`;
-                    listeQuestions.appendChild(ligne);
+                    ? 'QCM'
+                    : 'Vrai/Faux';
+    
+                    enonce.textContent = `${index + 1}. ${question.enonce} (${type})`;
+                    blocQuestion.appendChild(enonce);
+            
+                    // Afficher seulement la bonne réponse
+                    const bonneReponse = question.reponses.find(reponse => reponse.est_correcte);
+            
+                    if (bonneReponse) {
+                        const ligneReponse = document.createElement('p');
+                        ligneReponse.classList.add('reponse-quiz', 'bonne-reponse');
+                        ligneReponse.textContent = `Bonne réponse : ${bonneReponse.texte}`;
+                        blocQuestion.appendChild(ligneReponse);
+                    }
+                    
+                    listeQuestions.appendChild(blocQuestion);
                 });
             }
 
@@ -134,7 +153,51 @@ function creerBoutonsQuiz(quiz, carte) {
     boutonSupprimer.addEventListener('click', () => afficherConfirmation(quiz, carte));
 
     actions.append(boutonModifier, boutonSupprimer);
+
+    // afficher le bouton Publier seulement pour les brouillons
+    if (quiz.statut === 'brouillon') {
+        const boutonPublier = document.createElement('button');
+        boutonPublier.type = 'button';
+        boutonPublier.classList.add('bouton-publier');
+        boutonPublier.textContent = 'Publier';
+    
+        boutonPublier.addEventListener('click', () => {
+            publierQuiz(quiz.id, boutonPublier);
+        });
+    
+        actions.appendChild(boutonPublier);
+    }
+
     return actions;
+}
+
+
+// Publier un quiz
+async function publierQuiz(quizId, bouton) {
+    bouton.disabled = true;
+
+    try {
+        const response = await fetch(`/api/quiz/${quizId}/publier`, {
+            method: 'PATCH'
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            window.location.href = '/html/login.html';
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Impossible de publier le quiz.');
+        }
+
+        // Actualiser la liste pour afficher le statut Publié
+        await afficherMesQuiz();
+
+    } catch (error) {
+        console.error(error);
+        alert('Impossible de publier le quiz.');
+        bouton.disabled = false;
+    }
 }
 
 // Fenêtre de confirmation avant de supprimer

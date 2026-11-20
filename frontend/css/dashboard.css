@@ -160,6 +160,22 @@ body::before {
   background-color: var(--rouge-fonce);
 }
 
+.bouton-publier {
+    background-color: #e82118;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.bouton-publier:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
 #listeQuiz {
   display: flex;
   flex-direction: column;
@@ -208,6 +224,11 @@ body::before {
 .statut-brouillon {
   background-color: #e4e4e4;
   color: var(--gris);
+}
+
+.statut-publie {
+  background-color: #d4edda;
+  color: #155724;
 }
 
 @media (max-width: 600px) {
@@ -380,4 +401,30 @@ body::before {
 .actions-fenetre .bouton-annuler:hover {
   background-color: #d9d9d9;
   border-color: var(--noir);
+}
+
+.question-quiz {
+    margin-bottom: 15px;
+}
+
+.reponse-quiz {
+    margin: 5px 0 5px 20px;
+}
+
+.bonne-reponse {
+    color: #155724;
+    font-weight: 600;
+}
+
+.lien-retour {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 20px;
+    color: #e82118;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.lien-retour:hover {
+    text-decoration: underline;
 }
