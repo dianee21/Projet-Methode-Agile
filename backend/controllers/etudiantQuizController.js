@@ -1,4 +1,5 @@
 const quizModel = require('../models/quizModel');
+const soumissionModel = require('../models/soumissionModel');
 
 // Je lis l'identifiant du quiz dans l'adresse et je refuse une valeur invalide.
 function readQuizId(req, res) {
@@ -35,4 +36,47 @@ async function voirQuizPublie(req, res, next) {
   }
 }
 
-module.exports = { listerQuizPublies, voirQuizPublie };
+async function soumettreQuiz(req, res, next) {
+    const quizId = readQuizId(req, res);
+    if (quizId === null) return;
+
+    const reponses = req.body?.reponses;
+
+    if (!Array.isArray(reponses)) {
+        return res.status(400).json({
+            message: 'Les réponses sont invalides.'
+        });
+    }
+
+    try {
+        // Vérifier que le quiz est publié
+        const quiz = await quizModel.findPublishedQuiz(quizId);
+
+        if (!quiz) {
+            return res.status(404).json({
+                message: "Ce quiz n'est pas disponible."
+            });
+        }
+
+        // Enregistrer la soumission de l'étudiant connecté
+        const soumissionId = await soumissionModel.enregistrerSoumission(
+            req.session.userId,
+            quizId,
+            reponses
+        );
+
+        return res.status(201).json({
+            message: 'Quiz soumis avec succès.',
+            soumissionId
+        });
+
+    } catch (error) {
+        if (error.status === 400) {
+            return res.status(400).json({ message: error.message });
+        }
+
+        return next(error);
+    }
+}
+
+module.exports = { listerQuizPublies, voirQuizPublie, soumettreQuiz };

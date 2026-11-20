@@ -82,7 +82,8 @@ async function chargerQuiz() {
 chargerQuiz();
 
 // Sprint 3 - Verifier si l'etudiant a repondu a toutes les questions.
-document.getElementById('terminerQuiz').addEventListener('click', () => {
+
+document.getElementById('terminerQuiz').addEventListener('click', async () => {
     const questionsManquantes = questionsSansReponse();
 
     if (questionsManquantes.length > 0) {
@@ -91,10 +92,56 @@ document.getElementById('terminerQuiz').addEventListener('click', () => {
         return;
     }
 
-    // Toutes les questions sont cochées : confirmation locale, sans envoyer les réponses au backend.
-    sessionStorage.setItem('confirmationQuiz', JSON.stringify({
-        titre: titreQuiz.textContent,
-        nombreQuestions: document.querySelectorAll('.carte-question').length
-    }));
-    window.location.href = '/html/confirmation-quiz.html';
+    // Récupérer l'identifiant du quiz
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    // Récupérer les réponses sélectionnées par l'étudiant
+    const reponses = [];
+
+    document.querySelectorAll('.carte-question').forEach(carte => {
+        const choix = carte.querySelector('input[type="radio"]:checked');
+
+        reponses.push({
+            questionId: Number(choix.name.replace('question-', '')),
+            reponseId: Number(choix.value)
+        });
+    });
+
+    const bouton = document.getElementById('terminerQuiz');
+    bouton.disabled = true;
+
+    try {
+        // Envoyer les réponses au backend
+        const response = await fetch(`/api/etudiant/quiz/${id}/soumettre`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ reponses })
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            window.location.replace('/html/login.html');
+            return;
+        }
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || 'Impossible de soumettre le quiz.');
+        }
+
+        // Conserver les informations pour la page de confirmation
+        sessionStorage.setItem('confirmationQuiz', JSON.stringify({
+            titre: titreQuiz.textContent,
+            nombreQuestions: reponses.length
+        }));
+
+        // Rediriger seulement si les réponses sont enregistrées
+        window.location.href = '/html/confirmation-quiz.html';
+
+    } catch (erreur) {
+        console.error(erreur);
+        etatQuiz.textContent = erreur.message;
+        bouton.disabled = false;
+    }
 });
