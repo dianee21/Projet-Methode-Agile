@@ -80,3 +80,21 @@ async function chargerQuiz() {
 }
 
 chargerQuiz();
+
+// Sprint 3 - Verifier si l'etudiant a repondu a toutes les questions.
+document.getElementById('terminerQuiz').addEventListener('click', () => {
+    const questionsManquantes = questionsSansReponse();
+
+    if (questionsManquantes.length > 0) {
+        etatQuiz.textContent = `Il reste ${questionsManquantes.length} question(s) sans reponse.`;
+        questionsManquantes[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    // Toutes les questions sont cochées : confirmation locale, sans envoyer les réponses au backend.
+    sessionStorage.setItem('confirmationQuiz', JSON.stringify({
+        titre: titreQuiz.textContent,
+        nombreQuestions: document.querySelectorAll('.carte-question').length
+    }));
+    window.location.href = '/html/confirmation-quiz.html';
+});

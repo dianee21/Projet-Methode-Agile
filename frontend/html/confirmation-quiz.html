@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation du quiz</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <script src="../js/confirmation-quiz.js" defer></script>
+    <script src="../js/logout.js" defer></script>
+</head>
+<body>
+    <header class="entete">
+        <a href="/html/dashboard-etudiant.html" class="entete-lien" aria-label="Retour au tableau de bord">
+            <img src="../image/imagesAH2.jpg" alt="Logo du Collège Ahuntsic" class="entete-logo">
+        </a>
+        <button type="button" id="logoutBtn" class="bouton-deconnexion">Déconnexion</button>
+    </header>
+    <main class="contenu">
+        <section class="carte-bienvenue">
+            <h1 id="titreConfirmation">Confirmation du quiz</h1>
+            <p id="detailsConfirmation" role="status"></p>
+            <p style="margin-top: 16px;">
+                Attention : les réponses ont été vérifiées dans le navigateur,
+                mais elles ne sont pas encore envoyées ni enregistrées sur le serveur.
+            </p>
+            <p style="margin-top: 24px;">
+                <a href="/html/dashboard-etudiant.html" class="bouton-principal" style="display:inline-block;text-decoration:none;">
+                    Retour aux quiz disponibles
+                </a>
+            </p>
+        </section>
+    </main>
+    <footer class="pied-page"><p>© 2026 Collège Ahuntsic. Tous droits réservés.</p></footer>
+</body>
+</html>
