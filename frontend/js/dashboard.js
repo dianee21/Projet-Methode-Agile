@@ -95,13 +95,29 @@ async function afficherMesQuiz() {
                 listeQuestions.textContent = 'Aucune question ajoutée.';
             } else {
                 questions.forEach((question, index) => {
-                    const ligne = document.createElement('p');
+                    const blocQuestion = document.createElement('div');
+                    blocQuestion.classList.add('question-quiz');
+    
+                    // Afficher l'énoncé et le type de la question
+                    const enonce = document.createElement('p');
                     const type = question.type === 'qcm'
-                        ? 'QCM'
-                        : 'Vrai/Faux';
-
-                    ligne.textContent = `${index + 1}. ${question.enonce} (${type})`;
-                    listeQuestions.appendChild(ligne);
+                    ? 'QCM'
+                    : 'Vrai/Faux';
+    
+                    enonce.textContent = `${index + 1}. ${question.enonce} (${type})`;
+                    blocQuestion.appendChild(enonce);
+            
+                    // Afficher seulement la bonne réponse
+                    const bonneReponse = question.reponses.find(reponse => reponse.est_correcte);
+            
+                    if (bonneReponse) {
+                        const ligneReponse = document.createElement('p');
+                        ligneReponse.classList.add('reponse-quiz', 'bonne-reponse');
+                        ligneReponse.textContent = `Bonne réponse : ${bonneReponse.texte}`;
+                        blocQuestion.appendChild(ligneReponse);
+                    }
+                    
+                    listeQuestions.appendChild(blocQuestion);
                 });
             }
 
