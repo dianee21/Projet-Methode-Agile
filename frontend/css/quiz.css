@@ -224,13 +224,6 @@
     background-color: var(--gris-clair);
 }
 
-/* Les deux actions de sauvegarde du quiz enseignant. */
-.carte-apercu #enregistrerBrouillon {
-    display: block;
-    width: 100%;
-    margin-bottom: 12px;
-}
-.carte-apercu #publierQuiz[hidden],
-.carte-apercu #enregistrerBrouillon[hidden] {
+.carte-apercu #publierQuiz[hidden] {
     display: none;
 }

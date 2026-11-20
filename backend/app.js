@@ -44,7 +44,7 @@ app.get('/api/dashboard-etudiant', requireAuth, requireRole('etudiant'), (req, r
 // Gérer les erreurs du serveur
 app.use((error, req, res, next) => {
     console.error(error);
-    res.json({
+    res.status(500).json({
         message: "Une erreur est survenue sur le serveur."
     });
 });

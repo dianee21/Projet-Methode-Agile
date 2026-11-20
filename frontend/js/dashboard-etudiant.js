@@ -25,6 +25,19 @@ async function verifierConnexion() {
         console.error(error);
     }
 }
+
+// Récupérer les questions
+async function recupererQuestions(quizId) {
+    const response = await fetch(`/api/etudiant/quiz/${quizId}`);
+
+    if (!response.ok) {
+        throw new Error('Impossible de récupérer les questions du quiz.');
+    }
+
+    const data = await response.json();
+    return data.questions;
+}
+
 // Récupérer et afficher les quiz publiés
 async function afficherQuizDisponibles() {
     const listeQuiz = document.getElementById('listeQuiz');
@@ -52,21 +65,33 @@ async function afficherQuizDisponibles() {
             return;
         }
         // Afficher chaque quiz : un clic ouvre la page publique du quiz
-        data.quiz.forEach(quiz => {
+        for(const quiz of data.quiz) {
             const carte = document.createElement('a');
             carte.classList.add('carte-quiz', 'lien-quiz');
             carte.href = `/html/quiz-etudiant.html?id=${quiz.id}`;
             const titre = document.createElement('h3');
             titre.textContent = quiz.titre;
-            const description = document.createElement('p');
-            description.textContent = quiz.description || 'Aucune description.';
+
+            const questions = await recupererQuestions(quiz.id);
+            const listeQuestions = document.createElement('div');
+
+            questions.forEach((question, index) => {
+                const ligne = document.createElement('p');
+                const type = question.type === 'qcm'
+                ? 'QCM'
+                : 'Vrai/Faux';
+    
+                ligne.textContent = `${index + 1}. ${question.enonce} (${type})`;
+                listeQuestions.appendChild(ligne);
+            });
+
             const enseignant = document.createElement('p');
             enseignant.textContent = `Enseignant : ${quiz.enseignant}`;
             carte.appendChild(titre);
-            carte.appendChild(description);
+            carte.appendChild(listeQuestions);
             carte.appendChild(enseignant);
             listeQuiz.appendChild(carte);
-        });
+        };
     } catch (error) {
         console.error(error);
         listeQuiz.textContent = 'Impossible de charger les quiz.';

@@ -224,8 +224,8 @@ enregistrerQuestion.addEventListener('click', () => {
 
 // S2 - Valider et enregistrer le formulaire complet
 const boutonPublier = document.getElementById('publierQuiz');
-const boutonBrouillon = document.getElementById('enregistrerBrouillon');
 let operationEnCours = false;
+let statutQuiz = null;
 const messageCreation = document.getElementById('messageCreation');
 
 // Mode modification : on change les textes de la page et on charge le quiz
@@ -234,8 +234,7 @@ if (modeModification) {
     document.querySelector('.carte-creation h1').textContent = 'Modifier le quiz';
     document.querySelector('.carte-creation > p').textContent =
         'Changez le titre, les questions ou les réponses, puis enregistrez.';
-    boutonBrouillon.textContent = 'Enregistrer les modifications';
-    boutonPublier.hidden = true; // Sera affiché seulement si le quiz est un brouillon.
+    boutonPublier.textContent = 'Enregistrer les modifications'
     chargerQuizAModifier();
 }
 
@@ -259,7 +258,12 @@ async function chargerQuizAModifier() {
 
         document.getElementById('titreQuiz').value = data.quiz.titre;
         descriptionQuiz = data.quiz.description;
-        boutonPublier.hidden = data.quiz.statut !== 'brouillon';
+        
+        statutQuiz = data.quiz.statut;
+
+        boutonPublier.textContent = statutQuiz === 'brouillon'
+        ? 'Enregistrer et publier'
+        : 'Enregistrer les modifications';
 
         data.questions.forEach(question => {
             questions.push({
@@ -329,7 +333,14 @@ async function enregistrerNouveauQuiz(titre, publier, surCreation) {
     if (!response.ok) throw new Error('Impossible de créer le quiz.');
 
     const data = await response.json();
+
+    if (!data.quiz || !data.quiz.id) {
+        console.error('Réponse du serveur :', data);
+        throw new Error("Le serveur n'a pas retourné l'identifiant du quiz.");
+    }
+
     const id = data.quiz.id;
+
     surCreation(id); // Permet d'expliquer un éventuel échec partiel, sans perdre le brouillon.
 
     for (const question of questions) {
@@ -364,7 +375,6 @@ async function enregistrerFormulaire(publier) {
 
     operationEnCours = true;
     boutonPublier.disabled = true;
-    boutonBrouillon.disabled = true;
     messageCreation.textContent = 'Enregistrement en cours...';
     let idCree = null;
 
@@ -383,9 +393,10 @@ async function enregistrerFormulaire(publier) {
     } finally {
         operationEnCours = false;
         boutonPublier.disabled = false;
-        boutonBrouillon.disabled = false;
     }
 }
 
-boutonPublier.addEventListener('click', () => enregistrerFormulaire(true));
-boutonBrouillon.addEventListener('click', () => enregistrerFormulaire(false));
+boutonPublier.addEventListener('click', () => {
+    enregistrerFormulaire(false);
+});
+
