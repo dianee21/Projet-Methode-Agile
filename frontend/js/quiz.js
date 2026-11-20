@@ -224,6 +224,8 @@ enregistrerQuestion.addEventListener('click', () => {
 
 // S2 - Valider et enregistrer le formulaire complet
 const boutonPublier = document.getElementById('publierQuiz');
+const boutonBrouillon = document.getElementById('enregistrerBrouillon');
+let operationEnCours = false;
 const messageCreation = document.getElementById('messageCreation');
 
 // Mode modification : on change les textes de la page et on charge le quiz
@@ -232,7 +234,8 @@ if (modeModification) {
     document.querySelector('.carte-creation h1').textContent = 'Modifier le quiz';
     document.querySelector('.carte-creation > p').textContent =
         'Changez le titre, les questions ou les réponses, puis enregistrez.';
-    boutonPublier.textContent = 'Enregistrer les modifications';
+    boutonBrouillon.textContent = 'Enregistrer les modifications';
+    boutonPublier.hidden = true; // Sera affiché seulement si le quiz est un brouillon.
     chargerQuizAModifier();
 }
 
@@ -256,6 +259,7 @@ async function chargerQuizAModifier() {
 
         document.getElementById('titreQuiz').value = data.quiz.titre;
         descriptionQuiz = data.quiz.description;
+        boutonPublier.hidden = data.quiz.statut !== 'brouillon';
 
         data.questions.forEach(question => {
             questions.push({
@@ -270,10 +274,7 @@ async function chargerQuizAModifier() {
 
         afficherApercu();
 
-        // On remplit tout de suite le formulaire avec la première question
-        if (questions.length > 0) {
-            modifierQuestion(0);
-        }
+        // Cliquez sur Modifier dans l'aperçu pour éditer une question si nécessaire.
     } catch (error) {
         console.error(error);
         messageCreation.textContent = 'Impossible de charger le quiz.';
@@ -281,127 +282,110 @@ async function chargerQuizAModifier() {
     }
 }
 
-// Envoyer le quiz modifié au serveur (titre + toutes les questions)
-async function enregistrerModifications(titre) {
-    boutonPublier.disabled = true;
-    messageCreation.textContent = 'Enregistrement en cours...';
-
-    try {
-        const response = await fetch(`/api/quiz/${quizId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                titre,
-                description: descriptionQuiz,
-                questions
-            })
-        });
-
-        if (response.status === 401 || response.status === 403) {
-            window.location.href = '/html/login.html';
-            return;
-        }
-
-        if (!response.ok) {
-            const data = await response.json();
-            messageCreation.textContent = data.message || 'Impossible d’enregistrer les modifications.';
-            boutonPublier.disabled = false;
-            return;
-        }
-
-        // Retour au Dashboard
-        window.location.href = '/html/dashboard.html';
-    } catch (error) {
-        console.error(error);
-        messageCreation.textContent = 'Impossible d’enregistrer les modifications.';
-        boutonPublier.disabled = false;
+// Publier un brouillon après avoir enregistré ses questions.
+async function demanderPublication(id) {
+    const response = await fetch(`/api/quiz/${id}/publier`, { method: 'PATCH' });
+    if (response.status === 401 || response.status === 403) {
+        window.location.href = '/html/login.html';
+        throw new Error('Connexion expirée ou accès refusé.');
+    }
+    if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || 'Impossible de publier ce quiz.');
     }
 }
 
-boutonPublier.addEventListener('click', async () => {
-    const titre = document.getElementById('titreQuiz').value.trim();
-
-    messageCreation.textContent = '';
-
-    // Vérifier le titre du quiz
-    if (!titre || titre.length > 150) {
-        messageCreation.textContent =
-            'Veuillez saisir un titre valide (150 caractères maximum).';
-        return;
+// Modifier le contenu d'un quiz existant, puis le publier si demandé.
+async function enregistrerModifications(titre, publier) {
+    const response = await fetch(`/api/quiz/${quizId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(questions.length > 0
+            ? { titre, description: descriptionQuiz, questions }
+            : { titre, description: descriptionQuiz })
+    });
+    if (response.status === 401 || response.status === 403) {
+        window.location.href = '/html/login.html';
+        throw new Error('Connexion expirée ou accès refusé.');
     }
-
-    // Vérifier qu'au moins une question a été ajoutée
-    if (questions.length === 0) {
-        messageCreation.textContent =
-            'Veuillez ajouter au moins une question au quiz.';
-        return;
+    if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || 'Impossible de modifier le quiz.');
     }
+    if (publier) await demanderPublication(quizId);
+}
 
-    // Modification d'un quiz existant : on envoie tout au serveur et on s'arrête ici
-    if (modeModification) {
-        if (indexEnModification !== null) {
-            messageCreation.textContent =
-                'Terminez d’abord la modification de la question.';
-            return;
-        }
-
-        await enregistrerModifications(titre);
-        return;
+// Enregistrer un nouveau quiz : brouillon par défaut, publication seulement si demandée.
+async function enregistrerNouveauQuiz(titre, publier, surCreation) {
+    const response = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titre, description: null })
+    });
+    if (response.status === 401 || response.status === 403) {
+        window.location.href = '/html/login.html';
+        throw new Error('Connexion expirée ou accès refusé.');
     }
+    if (!response.ok) throw new Error('Impossible de créer le quiz.');
 
-    boutonPublier.disabled = true;
-    messageCreation.textContent = 'Enregistrement en cours...';
+    const data = await response.json();
+    const id = data.quiz.id;
+    surCreation(id); // Permet d'expliquer un éventuel échec partiel, sans perdre le brouillon.
 
-    let nouveauQuizId = null;
-
-    try {
-        // Créer le quiz avec l'API d'Amine
-        const responseQuiz = await fetch('/api/quizzes', {
+    for (const question of questions) {
+        const result = await fetch(`/api/quizzes/${id}/questions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                titre,
-                description: null
-            })
+            body: JSON.stringify(question)
         });
+        if (!result.ok) throw new Error("L'enregistrement d'une question a échoué.");
+    }
+    if (publier) await demanderPublication(id);
+}
 
-        if (!responseQuiz.ok) {
-            throw new Error('La création du quiz a échoué.');
+// Les deux boutons utilisent les mêmes contrôles, mais une action différente.
+async function enregistrerFormulaire(publier) {
+    if (operationEnCours) return;
+    const titre = document.getElementById('titreQuiz').value.trim();
+    messageCreation.textContent = '';
+
+    if (!titre || titre.length > 150) {
+        messageCreation.textContent = 'Veuillez saisir un titre valide (150 caractères maximum).';
+        return;
+    }
+    if (publier && questions.length === 0) {
+        messageCreation.textContent = 'Ajoutez au moins une question avant de publier le quiz.';
+        return;
+    }
+    if (modeModification && indexEnModification !== null) {
+        messageCreation.textContent = "Terminez d'abord la modification de la question.";
+        return;
+    }
+
+    operationEnCours = true;
+    boutonPublier.disabled = true;
+    boutonBrouillon.disabled = true;
+    messageCreation.textContent = 'Enregistrement en cours...';
+    let idCree = null;
+
+    try {
+        if (modeModification) {
+            await enregistrerModifications(titre, publier);
+        } else {
+            await enregistrerNouveauQuiz(titre, publier, id => { idCree = id; });
         }
-
-        const dataQuiz = await responseQuiz.json();
-        nouveauQuizId = dataQuiz.quiz.id;
-
-        // Enregistrer chaque question et ses réponses
-        for (const question of questions) {
-            const responseQuestion = await fetch(
-                `/api/quizzes/${nouveauQuizId}/questions`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(question)
-                }
-            );
-
-            if (!responseQuestion.ok) {
-                throw new Error('L’enregistrement d’une question a échoué.');
-            }
-        }
-
-        // Confirmation
-        messageCreation.textContent = 'Quiz enregistré avec succès !';
-
-        // Retour au Dashboard
         window.location.href = '/html/dashboard.html';
-
     } catch (error) {
         console.error(error);
-
-        messageCreation.textContent = nouveauQuizId === null
-            ? 'Impossible de créer le quiz. Vérifiez votre connexion.'
-            : 'Le quiz a été créé, mais certaines questions n’ont pas pu être enregistrées. Vérifiez-le avant de réessayer.';
-
+        messageCreation.textContent = idCree !== null
+            ? `Le quiz ${idCree} a été créé en brouillon, mais l'opération n'a pas été terminée : ${error.message} Retrouvez-le dans le tableau de bord avant de réessayer.`
+            : error.message;
     } finally {
+        operationEnCours = false;
         boutonPublier.disabled = false;
+        boutonBrouillon.disabled = false;
     }
-});
+}
+
+boutonPublier.addEventListener('click', () => enregistrerFormulaire(true));
+boutonBrouillon.addEventListener('click', () => enregistrerFormulaire(false));

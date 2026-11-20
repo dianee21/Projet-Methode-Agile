@@ -91,5 +91,10 @@ document.getElementById('terminerQuiz').addEventListener('click', () => {
         return;
     }
 
-    etatQuiz.textContent = 'Toutes les questions ont une reponse.';
+    // Toutes les questions sont cochées : confirmation locale, sans envoyer les réponses au backend.
+    sessionStorage.setItem('confirmationQuiz', JSON.stringify({
+        titre: titreQuiz.textContent,
+        nombreQuestions: document.querySelectorAll('.carte-question').length
+    }));
+    window.location.href = '/html/confirmation-quiz.html';
 });
