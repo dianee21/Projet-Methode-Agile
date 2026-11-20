@@ -415,3 +415,16 @@ body::before {
     color: #155724;
     font-weight: 600;
 }
+
+.lien-retour {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 20px;
+    color: #e82118;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.lien-retour:hover {
+    text-decoration: underline;
+}
